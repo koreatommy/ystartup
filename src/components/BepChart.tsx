@@ -169,7 +169,7 @@ export function BepChart() {
             <Tooltip
               content={<BepTooltip />}
               cursor={{ stroke: "var(--color-text-subtle)", strokeDasharray: "4 4" }}
-              formatter={(value: number) => [`${value}만 원`, ""]}
+              formatter={(value: number | undefined) => [value != null ? `${value}만 원` : "", ""]}
             />
             <ReferenceLine
               y={FIXED}
