@@ -129,6 +129,17 @@ const workbook02Items: WorkbookContent["items"] = [
     subtitle: "Analyzing problems using the 5 Whys technique",
     pdfPath: "/pdf/02_workbook_ori_부분2.pdf",
     thumbnailPath: "/pdf/thumbnails/02_workbook_ori_부분2.jpg",
+    href: "/root-hunter",
+    description:
+      "🌳 뿌리를 찾아라 (Root Hunter)\n\n" +
+      "【게임 구조】 5 Whys를 나무 구조로 시각화\n" +
+      "• Why 1 🌿 가지 1 — 증상\n" +
+      "• Why 2 🌱 가지 2 — 직접 원인\n" +
+      "• Why 3 🪵 줄기 — 행동 원인\n" +
+      "• Why 4 🔍 뿌리 1 — 시스템 원인\n" +
+      "• Why 5 💡 뿌리 2 — 근본 원인\n\n" +
+      "【주요 기능】 실시간 나무 성장 SVG · 3가지 시나리오(성적/기계/강 오염) · 오답 시 흔들림 피드백 · 점수(빠를수록 고득점) · 팀 협동(2~5명, 레벨별 차례) · 결과 화면에 근본 원인·해결 방향·토론 팁\n\n" +
+      "【교실 활용】 팀 협동 모드로 각 학생이 하나의 Why 담당 → 완료 후 \"우리 학교에서 이 뿌리를 어떻게 고칠까?\" 토론으로 이어가기",
   },
   {
     label: "WB2-③ 해결 아이디어 떠올리기",

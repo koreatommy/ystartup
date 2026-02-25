@@ -12,6 +12,10 @@ export interface WorkbookItem {
   thumbnailPath?: string;
   /** 표시용 순번 (비연속 번호·합침 표기 시 사용, 예: "4·5", "6") */
   badgeNumber?: string;
+  /** 항목 클릭 시 이동할 경로 (예: 도구/게임 페이지) */
+  href?: string;
+  /** 항목 설명(게임/도구 요약 등). 있으면 카드 내에 표시 */
+  description?: string;
 }
 
 /** 학습 내용용 간단 테이블 (컬럼 키 → 셀 값) */

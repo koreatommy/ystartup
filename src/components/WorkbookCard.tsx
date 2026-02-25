@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 import type { WorkbookContent } from "@/types/workbook";
 import { chapters } from "@/data/chapters";
 import { BookOpen, ArrowRight } from "lucide-react";
@@ -234,28 +235,49 @@ export function WorkbookCard({ content }: WorkbookCardProps) {
           </div>
         ) : null}
         <ul className="flex flex-col gap-4">
-          {content.items.map((item, index) => (
-            <li 
-              key={index} 
-              className="group flex items-start gap-4 rounded-xl bg-[var(--glass-bg)] p-4 transition-all hover:bg-[var(--glass-bg-hover)]"
-            >
-              <div 
-                className="flex h-8 min-w-8 shrink-0 items-center justify-center rounded-lg px-1.5 text-white text-sm font-bold"
-                style={{ backgroundColor: chapterColor }}
-              >
-                {item.badgeNumber ?? index + 1}
-              </div>
-              <div className="flex min-w-0 flex-1 flex-col gap-1">
-                <span className="font-main text-sm font-semibold leading-snug text-[var(--color-text)]">
-                  {item.label}
-                </span>
-                <span className="font-main text-xs font-normal leading-relaxed text-[var(--color-text-muted)]">
-                  {item.subtitle}
-                </span>
-              </div>
-              <ArrowRight className="h-4 w-4 shrink-0 text-[var(--color-text-subtle)] opacity-0 transition-all group-hover:opacity-100 group-hover:text-[var(--color-text-muted)]" />
-            </li>
-          ))}
+          {content.items.map((item, index) => {
+            const itemClassName =
+              "group flex items-start gap-4 rounded-xl bg-[var(--glass-bg)] p-4 transition-all hover:bg-[var(--glass-bg-hover)]";
+            const inner = (
+              <>
+                <div
+                  className="flex h-8 min-w-8 shrink-0 items-center justify-center rounded-lg px-1.5 text-white text-sm font-bold"
+                  style={{ backgroundColor: chapterColor }}
+                >
+                  {item.badgeNumber ?? index + 1}
+                </div>
+                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                  <span className="font-main text-sm font-semibold leading-snug text-[var(--color-text)]">
+                    {item.label}
+                  </span>
+                  <span className="font-main text-xs font-normal leading-relaxed text-[var(--color-text-muted)]">
+                    {item.subtitle}
+                  </span>
+                  {item.description != null && item.description.length > 0 && (
+                    <p className="mt-2 font-main text-xs leading-relaxed text-[var(--color-text-muted)] whitespace-pre-line border-l-2 border-[var(--color-primary)] pl-3 py-1">
+                      {item.description}
+                    </p>
+                  )}
+                </div>
+                <ArrowRight className="h-4 w-4 shrink-0 text-[var(--color-text-subtle)] opacity-0 transition-all group-hover:opacity-100 group-hover:text-[var(--color-text-muted)]" />
+              </>
+            );
+            return (
+              <li key={index}>
+                {item.href ? (
+                  <Link
+                    href={item.href}
+                    className={`block ${itemClassName}`}
+                    aria-label={`${item.label}: ${item.subtitle}`}
+                  >
+                    {inner}
+                  </Link>
+                ) : (
+                  <div className={itemClassName}>{inner}</div>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </div>
     </article>
