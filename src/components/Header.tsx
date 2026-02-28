@@ -75,7 +75,7 @@ export function Header({ onMenuClick, onIndexClick, isMenuOpen = false }: Header
         >
           <span className="text-xs font-medium text-[var(--color-text)]">매뉴</span>
           <span className="text-[10px] opacity-80">
-            {isMenuOpen ? "&lt; 닫기" : "열기 &gt;"}
+            {isMenuOpen ? "< 닫기" : "열기 >"}
           </span>
         </button>
       </div>
