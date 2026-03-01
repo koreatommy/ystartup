@@ -25,6 +25,12 @@ export function PdfEditorModal({
 }: PdfEditorModalProps) {
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
+  const onPageRendered = useCallback((width: number, height: number) => {
+    setCanvasSize((prev) =>
+      prev.width === width && prev.height === height ? prev : { width, height }
+    );
+  }, []);
+
   const {
     pdfDocument,
     currentPage,
@@ -109,7 +115,7 @@ export function PdfEditorModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
       onClick={onClose}
     >
       <div
@@ -188,7 +194,7 @@ export function PdfEditorModal({
                   pdfDocument={pdfDocument}
                   pageNumber={currentPage}
                   scale={scale}
-                  onPageRendered={(width, height) => setCanvasSize({ width, height })}
+                  onPageRendered={onPageRendered}
                 />
                 <AnnotationCanvas
                   width={canvasSize.width}
