@@ -5,7 +5,7 @@ import Image from "next/image";
 import type { WorkbookItem } from "@/types/workbook";
 import { Eye, Printer, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PdfPreviewModal } from "./PdfPreviewModal";
+import { PdfEditorModal } from "./pdf-editor/PdfEditorModal";
 
 interface WorkbookItemThumbnailProps {
   item: WorkbookItem;
@@ -131,7 +131,7 @@ export function WorkbookItemThumbnail({ item, index }: WorkbookItemThumbnailProp
       </figure>
 
       {item.pdfPath && (
-        <PdfPreviewModal
+        <PdfEditorModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           pdfPath={item.pdfPath}
