@@ -13,13 +13,15 @@ import {
   Undo,
   Redo,
   Palette,
+  Hand,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { AnnotationType, ShapeType } from "@/types/annotation";
+import type { ToolType } from "@/hooks/useAnnotations";
 
 interface EditorToolbarProps {
-  selectedTool: AnnotationType | "eraser" | null;
-  onToolChange: (tool: AnnotationType | "eraser" | null) => void;
+  selectedTool: ToolType;
+  onToolChange: (tool: ToolType) => void;
   selectedColor: string;
   onColorChange: (color: string) => void;
   selectedStrokeWidth: number;
@@ -46,11 +48,11 @@ const COLORS = [
 const STROKE_WIDTHS = [1, 2, 4, 8, 12];
 
 interface ToolButtonProps {
-  tool: AnnotationType | "eraser";
+  tool: ToolType;
   icon: React.ComponentType<{ className?: string }>;
   label: string;
-  selectedTool: AnnotationType | "eraser" | null;
-  onToolChange: (tool: AnnotationType | "eraser" | null) => void;
+  selectedTool: ToolType;
+  onToolChange: (tool: ToolType) => void;
 }
 
 function ToolButton({
@@ -126,6 +128,7 @@ export function EditorToolbar({
   return (
     <div className="relative flex flex-col gap-2 p-2 bg-[#323639] border-b border-gray-700 md:flex-row md:items-center md:justify-center">
       <div className="flex items-center gap-1 flex-nowrap md:flex-wrap overflow-x-auto pb-1 md:pb-0 justify-center md:justify-center">
+        <ToolButton tool="hand" icon={Hand} label="이동" selectedTool={selectedTool} onToolChange={onToolChange} />
         <ToolButton tool="pen" icon={Pencil} label="펜" selectedTool={selectedTool} onToolChange={onToolChange} />
         <ToolButton tool="highlighter" icon={Highlighter} label="형광펜" selectedTool={selectedTool} onToolChange={onToolChange} />
         <ToolButton tool="text" icon={Type} label="텍스트" selectedTool={selectedTool} onToolChange={onToolChange} />

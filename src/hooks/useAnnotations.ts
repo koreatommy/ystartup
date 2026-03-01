@@ -3,11 +3,13 @@
 import { useState, useCallback } from "react";
 import type { Annotation, AnnotationType, ShapeType } from "@/types/annotation";
 
+export type ToolType = AnnotationType | "eraser" | "hand" | null;
+
 export interface UseAnnotationsResult {
   annotations: Annotation[];
   history: Annotation[][];
   historyIndex: number;
-  selectedTool: AnnotationType | "eraser" | null;
+  selectedTool: ToolType;
   selectedColor: string;
   selectedStrokeWidth: number;
   selectedShape: ShapeType;
@@ -17,7 +19,7 @@ export interface UseAnnotationsResult {
   redo: () => void;
   canUndo: boolean;
   canRedo: boolean;
-  setSelectedTool: (tool: AnnotationType | "eraser" | null) => void;
+  setSelectedTool: (tool: ToolType) => void;
   setSelectedColor: (color: string) => void;
   setSelectedStrokeWidth: (width: number) => void;
   setSelectedShape: (shape: ShapeType) => void;
@@ -32,7 +34,7 @@ export function useAnnotations(): UseAnnotationsResult {
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
   const [history, setHistory] = useState<Annotation[][]>([[]]);
   const [historyIndex, setHistoryIndex] = useState(0);
-  const [selectedTool, setSelectedTool] = useState<AnnotationType | "eraser" | null>("pen");
+  const [selectedTool, setSelectedTool] = useState<ToolType>("pen");
   const [selectedColor, setSelectedColor] = useState("#000000");
   const [selectedStrokeWidth, setSelectedStrokeWidth] = useState(2);
   const [selectedShape, setSelectedShape] = useState<ShapeType>("rectangle");

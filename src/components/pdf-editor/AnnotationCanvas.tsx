@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useMemo } from "react";
 import type { Annotation, AnnotationType, PenAnnotation, ShapeAnnotation, TextAnnotation } from "@/types/annotation";
+import type { ToolType } from "@/hooks/useAnnotations";
 import { useDrawing } from "@/hooks/useDrawing";
 
 interface AnnotationCanvasProps {
@@ -10,7 +11,7 @@ interface AnnotationCanvasProps {
   annotations: Annotation[];
   scale: number;
   currentPage: number;
-  currentTool: string | null;
+  currentTool: ToolType;
   currentColor: string;
   currentStrokeWidth: number;
   shapeType?: string;
@@ -33,9 +34,11 @@ export function AnnotationCanvas({
 }: AnnotationCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  const effectiveTool = currentTool === "hand" ? null : currentTool;
+
   useDrawing({
     canvasRef,
-    currentTool: currentTool as AnnotationType | "eraser" | null,
+    currentTool: effectiveTool as AnnotationType | "eraser" | null,
     currentColor,
     currentStrokeWidth,
     currentPage,
@@ -156,11 +159,13 @@ export function AnnotationCanvas({
     });
   }, [annotationsKey, width, height, scale, pageAnnotations]);
 
+  const isHandTool = currentTool === "hand";
+
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 cursor-crosshair"
-      style={{ touchAction: "none" }}
+      className={`absolute inset-0 ${isHandTool ? "pointer-events-none" : "cursor-crosshair"}`}
+      style={{ touchAction: isHandTool ? "auto" : "none" }}
     />
   );
 }

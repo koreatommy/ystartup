@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Printer, Download, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePdfDocument } from "@/hooks/usePdfDocument";
 import { useAnnotations } from "@/hooks/useAnnotations";
+import { usePanAndZoom } from "@/hooks/usePanAndZoom";
 import { PdfCanvas } from "./PdfCanvas";
 import { AnnotationCanvas } from "./AnnotationCanvas";
 import { EditorToolbar } from "./EditorToolbar";
@@ -24,6 +25,7 @@ export function PdfEditorModal({
   title,
 }: PdfEditorModalProps) {
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const onPageRendered = useCallback((width: number, height: number) => {
     setCanvasSize((prev) =>
@@ -39,6 +41,7 @@ export function PdfEditorModal({
     isLoading,
     error,
     setCurrentPage,
+    setScale,
     zoomIn,
     zoomOut,
     resetZoom,
@@ -62,6 +65,15 @@ export function PdfEditorModal({
     setSelectedShape,
     getAnnotationsForPage,
   } = useAnnotations();
+
+  const { isPanning } = usePanAndZoom({
+    containerRef: scrollContainerRef,
+    currentTool: selectedTool,
+    scale,
+    minScale: 0.5,
+    maxScale: 3,
+    onScaleChange: setScale,
+  });
 
   useEffect(() => {
     if (isOpen) {
@@ -174,7 +186,12 @@ export function PdfEditorModal({
           onRedo={redo}
         />
 
-        <div className="flex-1 overflow-auto bg-[#525659]">
+        <div
+          ref={scrollContainerRef}
+          className={`flex-1 overflow-auto bg-[#525659] ${
+            selectedTool === "hand" ? (isPanning ? "cursor-grabbing" : "cursor-grab") : ""
+          }`}
+        >
           <div className="min-h-full flex items-start justify-center p-4">
             {isLoading && (
               <div className="text-center mt-20">
