@@ -43,6 +43,7 @@ const workbook01: WorkbookContent = {
     '💡 핵심 통찰 "팀워크는 창업의 첫걸음! 서로 다른 개성과 아이디어를 모으면 하나의 멋진 브랜드가 될 수 있습니다. 우리 팀만의 이름으로 세상을 바꿀 준비를 시작하세요."',
   summaryClosing:
     "🚀 팀을 구성하고 창업의 정의를 내렸다면, 이제 우리 팀이 해결할 **'일상 속의 작은 불편함'**을 본격적으로 찾아 나설 차례입니다.",
+  summaryImage: "/images/info1.jpg",
   items: [
     {
       label: "WB1-① 우리 팀, 우리의 브랜드(창업 탐험대 구성하기)",
@@ -184,6 +185,7 @@ const workbook02: WorkbookContent = {
     '💡 핵심 통찰 "작은 불편함이 세상을 바꾸는 큰 아이디어가 되는 과정! 겉으로 보이는 현상을 넘어, 5번의 질문으로 뿌리 깊은 근본 원인을 찾아내세요."',
   summaryClosing:
     "👤 문제를 찾았다면, 이제 이 문제를 가장 간절하게 해결하고 싶어 할 '누군가'를 만나러 갈 차례입니다.",
+  summaryImage: "/images/info2.png",
 };
 
 const workbook03Items: WorkbookContent["items"] = [
@@ -249,6 +251,7 @@ const workbook03: WorkbookContent = {
   ],
   summaryClosing:
     "💜 고객을 이해했다면, 그들의 마음속으로 더 깊이 들어가 그들이 느끼는 감정에 공감해 봅시다.",
+  summaryImage: "/images/info3.png",
 };
 
 const wb04PainGainTable: WorkbookContent["summaryTable"] = {
@@ -331,6 +334,7 @@ const workbook04: WorkbookContent = {
   summaryTable: wb04PainGainTable,
   summaryClosing:
     "📦 이제 막연했던 아이디어가 뿌리를 내렸습니다. 이제 눈에 보이는 형태인 '제품'으로 만들어볼까요?",
+  summaryImage: "/images/info04.png",
 };
 
 const wb05AppSteps: string[] = [
@@ -397,6 +401,7 @@ const workbook05: WorkbookContent = {
   summaryStepsTitle: "📱 앱 개발 6단계 프로세스",
   summaryClosing:
     "💰 제품이 준비되었다면, 이제 이 사업이 어떻게 돈을 벌고 운영될지 구조를 세워야 합니다.",
+  summaryImage: "/images/info05.png",
 };
 
 const wb06BmcTable: WorkbookContent["summaryTable"] = {
@@ -465,6 +470,7 @@ const workbook06: WorkbookContent = {
   summaryTable: wb06BmcTable,
   summaryClosing:
     "🌿 튼튼한 줄기가 세워졌으니, 이제 우리 서비스를 세상에 널리 알릴 잎을 틔울 시간입니다.",
+  summaryImage: "/images/info06.png",
 };
 
 const wb074P4CTable: WorkbookContent["summaryTable"] = {
@@ -559,6 +565,7 @@ const workbook07: WorkbookContent = {
   summaryTable: wb074P4CTable,
   summaryClosing:
     "📋 홍보 전략까지 세웠다면, 이제 팀원들과 함께 실제로 움직일 계획을 짤 차례입니다.",
+  summaryImage: "/images/info07.png",
 };
 
 const wb08RolesTable: WorkbookContent["summaryTable"] = {
@@ -632,6 +639,7 @@ const workbook08: WorkbookContent = {
   summaryStepsTitle: "📅 업무 우선순위 관리 코드 (간트 차트 활용 예시)",
   summaryClosing:
     "⛽ 마지막으로, 사업의 지속적인 성장을 위한 '연료'를 점검해야 합니다.",
+  summaryImage: "/images/info08.png",
 };
 
 const wb09BepSteps: string[] = [
@@ -683,6 +691,7 @@ const workbook09: WorkbookContent = {
   summaryStepsTitle: "📊 손익분기점 해석",
   summaryClosing:
     "🎤 드디어 모든 준비가 끝났습니다! 이제 여러분의 멋진 여행 결과물을 세상에 발표할 차례입니다.",
+  summaryImage: "/images/info09.png",
 };
 
 const workbook10Items: WorkbookContent["items"] = [
@@ -733,6 +742,7 @@ const workbook10: WorkbookContent = {
     "✨ 여러분의 빛나는 창업가 정신을 담아 아래 다짐을 완성해 보세요.\n\n\"우리 팀은 앞으로 ________________________________________________ 하는 창업가가 되겠다!\"",
   summaryClosing:
     "🎉 여러분의 용기 있는 도전을 진심으로 응원합니다!",
+  summaryImage: "/images/info10.png",
 };
 
 const workbookMap: Record<string, WorkbookContent> = {

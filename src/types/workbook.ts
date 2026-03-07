@@ -50,4 +50,6 @@ export interface WorkbookContent {
   summaryStepsTitle?: string;
   /** 학습 내용 마무리 문단 */
   summaryClosing?: string;
+  /** 학습 내용 영역에 표시할 이미지 경로 (예: /images/info1.jpg) */
+  summaryImage?: string;
 }

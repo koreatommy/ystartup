@@ -135,6 +135,16 @@ export function WorkbookCard({ content }: WorkbookCardProps) {
                 <SummaryBodyWithBold text={content.summaryBody} />
               </p>
             )}
+            {content.summaryImage != null && (
+              <div className="mb-4 overflow-hidden rounded-lg border border-[var(--glass-border)]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={content.summaryImage}
+                  alt="창업의 이해와 팀기반 창의활동 학습 참고 자료"
+                  className="w-full object-contain"
+                />
+              </div>
+            )}
             {content.summaryTable != null && (
               <div className="mb-4 overflow-hidden rounded-lg border border-[var(--glass-border)]">
                 {content.summaryTable.title != null && (
