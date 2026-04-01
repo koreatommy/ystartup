@@ -62,7 +62,7 @@ export async function updateSession(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
-  const publicPaths = ["/login", "/signup", "/signup/student", "/signup/coach"];
+  const publicPaths = ["/", "/login", "/signup", "/signup/student", "/signup/coach"];
   const isPublic = publicPaths.some(
     (p) => pathname === p || pathname.startsWith(p + "/"),
   );
@@ -74,6 +74,10 @@ export async function updateSession(request: NextRequest) {
   }
 
   if (sessionUser && isPublic) {
+    if (pathname === "/") {
+      return supabaseResponse;
+    }
+
     const { data: pubProfile } = await supabase
       .from("profiles")
       .select("role, status")

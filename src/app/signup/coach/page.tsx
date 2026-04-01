@@ -130,6 +130,16 @@ export default function CoachSignupPage() {
               로그인으로 돌아가기
             </Link>
           </div>
+
+          <div className="flex justify-center border-t border-[var(--glass-border)] pt-4">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 text-sm text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text)]"
+            >
+              <ArrowLeft className="h-3.5 w-3.5 shrink-0" />
+              랜딩 페이지로
+            </Link>
+          </div>
         </form>
       </div>
     </div>

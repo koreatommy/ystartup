@@ -3,7 +3,7 @@
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Sparkles, LogIn } from "lucide-react";
+import { ArrowLeft, Sparkles, LogIn } from "lucide-react";
 import { unstable_rethrow } from "next/navigation";
 import { login } from "@/lib/actions/auth";
 
@@ -131,6 +131,16 @@ function LoginForm() {
               className="text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors"
             >
               코치 가입 신청
+            </Link>
+          </div>
+
+          <div className="flex justify-center border-t border-[var(--glass-border)] pt-4">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 text-sm text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text)]"
+            >
+              <ArrowLeft className="h-3.5 w-3.5 shrink-0" />
+              랜딩 페이지로
             </Link>
           </div>
         </form>

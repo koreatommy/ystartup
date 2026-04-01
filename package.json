@@ -15,6 +15,7 @@
     "reset-coach-student-passwords": "node scripts/reset-coach-student-passwords.mjs"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.15",
     "@supabase/ssr": "^0.10.0",
     "@supabase/supabase-js": "^2.101.1",
     "canvas-confetti": "^1.9.4",

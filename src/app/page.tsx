@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getCurrentProfile } from "@/lib/actions/members";
 import { WorkbookDashboard } from "@/components/WorkbookDashboard";
+import { PublicLandingPage } from "@/components/landing/PublicLandingPage";
 
 export const dynamic = "force-dynamic";
 
@@ -8,7 +9,7 @@ export default async function Home() {
   const profile = await getCurrentProfile();
 
   if (!profile) {
-    redirect("/login");
+    return <PublicLandingPage />;
   }
 
   if (profile.status !== "approved") {
