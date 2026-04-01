@@ -8,6 +8,7 @@ import { getMyStudents, updateMyProfile } from "@/lib/actions/members";
 import { cn, formatProfileJoinedDate } from "@/lib/utils";
 import type { Profile } from "@/types/member";
 import { CoachMenuCharts } from "@/components/member/charts/coach/CoachMenuCharts";
+import { CoachPadletUrlsSection } from "./CoachPadletUrlsSection";
 
 const COACH_LIST_PAGE_SIZE = 10;
 
@@ -111,7 +112,10 @@ export function CoachContent({ selected, onSelect, profile }: Props) {
     [students, selectedStudentId],
   );
 
-  const coachAnalytics = (
+  const noCoachChart =
+    selected === "내 정보 조회" || selected === "내 정보 수정" || selected === "Padlet 주소 관리";
+
+  const coachAnalytics = noCoachChart ? null : (
     <div className="mt-6">
       <CoachMenuCharts
         selected={selected}
@@ -390,6 +394,10 @@ export function CoachContent({ selected, onSelect, profile }: Props) {
           />
         </div>
       </>
+    ),
+
+    "Padlet 주소 관리": (
+      <CoachPadletUrlsSection profile={profile} selected={selected} analyticsSlot={coachAnalytics} />
     ),
   };
 

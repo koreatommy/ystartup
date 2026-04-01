@@ -268,6 +268,9 @@ export function AdminMenuCharts({ selected, stats, schoolCounts, adminCount }: A
       );
     }
 
+    case "코치 Padlet 주소":
+      return null;
+
     case "코치 목록": {
       const coachDist = [
         { name: "승인", value: stats.coachApproved },

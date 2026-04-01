@@ -39,6 +39,12 @@ export interface AdminDashboardStats {
   studentsWithoutCoach: number;
 }
 
+/** 코치 Padlet 보드 링크 (profiles.padlet_urls JSONB 배열 요소) */
+export interface PadletUrlEntry {
+  id: string;
+  url: string;
+}
+
 export interface Profile {
   id: string;
   role: Role;
@@ -51,6 +57,8 @@ export interface Profile {
   school_name: string | null;
   grade: Grade | null;
   coach_id: string | null;
+  /** 코치 전용. 학생·관리자 행은 보통 빈 배열 */
+  padlet_urls: PadletUrlEntry[];
   created_at: string;
   updated_at: string;
 }

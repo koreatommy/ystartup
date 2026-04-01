@@ -96,6 +96,9 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
   const [manageSelectionKind, setManageSelectionKind] = useState<"coach" | "student" | null>(null);
   const [manageSaving, setManageSaving] = useState(false);
   const [manageDeactivating, setManageDeactivating] = useState(false);
+  const [padletCoachesPaged, setPadletCoachesPaged] = useState<PagedResult<Profile>>(emptyPaged);
+  const [padletCoachesPage, setPadletCoachesPage] = useState(1);
+  const [padletCoachSearchKeyword, setPadletCoachSearchKeyword] = useState("");
 
   const [recentPage, setRecentPage] = useState(1);
   const [allMembersPage, setAllMembersPage] = useState(1);
@@ -133,6 +136,8 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
       setManageStudentSearchKeyword("");
       setSelectedManageMember(null);
       setManageSelectionKind(null);
+      setPadletCoachesPage(1);
+      setPadletCoachSearchKeyword("");
     }
   }, [selected]);
 
@@ -155,6 +160,10 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
   useEffect(() => {
     setCoachApprovalPage(1);
   }, [coachApprovalSearchKeyword]);
+
+  useEffect(() => {
+    setPadletCoachesPage(1);
+  }, [padletCoachSearchKeyword]);
 
   useEffect(() => {
     setAssignmentCoachPage(1);
@@ -315,6 +324,16 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
             }
             break;
           }
+          case "코치 Padlet 주소": {
+            const r = await listProfilesPaged({
+              role: "coach",
+              page: padletCoachesPage,
+              pageSize: PAGE_SIZE,
+              search: padletCoachSearchKeyword,
+            });
+            if (!cancelled) setPadletCoachesPaged(r);
+            break;
+          }
           default:
             break;
         }
@@ -347,6 +366,8 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
     assignmentDetailMode,
     assignmentSelectedCoachId,
     assignmentListVersion,
+    padletCoachesPage,
+    padletCoachSearchKeyword,
   ]);
 
   useEffect(() => {
@@ -490,6 +511,15 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
     <div className="mt-6">
       <AdminMenuCharts selected={selected} stats={stats} schoolCounts={schoolCounts} adminCount={adminCount} />
     </div>
+  );
+
+  const padletPageUrlTotal = useMemo(
+    () => padletCoachesPaged.items.reduce((acc, c) => acc + c.padlet_urls.length, 0),
+    [padletCoachesPaged.items],
+  );
+  const padletPageCoachesWithUrls = useMemo(
+    () => padletCoachesPaged.items.filter((c) => c.padlet_urls.length > 0).length,
+    [padletCoachesPaged.items],
   );
 
   const contentMap: Record<string, React.ReactNode> = {
@@ -677,6 +707,81 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
               className="h-10 w-full min-w-[220px] rounded-lg border border-[var(--glass-border)] bg-[var(--glass-bg)] px-3 text-sm text-[var(--color-text)] outline-none transition-colors placeholder:text-[var(--color-text-subtle)] focus:border-[var(--color-primary)] sm:w-[320px]"
             />
           }
+        />
+      </>
+    ),
+
+    "코치 Padlet 주소": (
+      <>
+        <SectionHeader
+          badge="Coach Padlet"
+          title="코치 Padlet 주소"
+          description="코치별로 등록한 Padlet 보드 URL을 확인합니다. 코치는 본인 화면에서 주소를 편집합니다."
+          selected={selected}
+        />
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <StatCard label="전체 코치" value={String(stats.coaches)} hint="등록 코치" />
+          <StatCard label="이 페이지 코치" value={String(padletCoachesPaged.items.length)} hint={`${padletCoachesPage}페이지`} />
+          <StatCard label="이 페이지 URL 수" value={String(padletPageUrlTotal)} hint="표시 중인 행 합계" />
+          <StatCard
+            label="이 페이지 Padlet 보유"
+            value={String(padletPageCoachesWithUrls)}
+            hint="주소 1개 이상"
+          />
+        </div>
+        <DataTable
+          className="mt-6"
+          title="코치별 Padlet URL"
+          headers={["코치", "상태", "Padlet URL 목록"]}
+          rows={padletCoachesPaged.items.map((c) => [
+            <div key={`${c.id}-coach`} className="min-w-0 space-y-0.5">
+              <p className="font-medium text-[var(--color-text)]">{c.name}</p>
+              <p className="text-xs text-[var(--color-text-muted)]">{c.affiliation || "소속 없음"}</p>
+              <p className="truncate text-xs text-[var(--color-text-subtle)]">{c.email}</p>
+            </div>,
+            STATUS_LABELS[c.status],
+            <div key={`${c.id}-urls`} className="flex min-w-0 max-w-xl flex-col gap-2">
+              {c.padlet_urls.length === 0 ? (
+                <span className="text-sm text-[var(--color-text-subtle)]">등록된 Padlet 없음</span>
+              ) : (
+                c.padlet_urls.map((e, idx) => (
+                  <a
+                    key={e.id}
+                    href={e.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="break-all text-sm text-[var(--color-primary)] underline-offset-2 hover:underline"
+                  >
+                    {idx + 1}. {e.url}
+                  </a>
+                ))
+              )}
+            </div>,
+          ])}
+          pagination={{
+            page: padletCoachesPage,
+            pageSize: PAGE_SIZE,
+            totalCount: padletCoachesPaged.total,
+            onPageChange: setPadletCoachesPage,
+          }}
+          actions={
+            <input
+              type="search"
+              value={padletCoachSearchKeyword}
+              onChange={(e) => setPadletCoachSearchKeyword(e.target.value)}
+              placeholder={coachSearchPlaceholder}
+              className="h-10 w-full min-w-[220px] rounded-lg border border-[var(--glass-border)] bg-[var(--glass-bg)] px-3 text-sm text-[var(--color-text)] outline-none transition-colors placeholder:text-[var(--color-text-subtle)] focus:border-[var(--color-primary)] sm:w-[320px]"
+            />
+          }
+        />
+        <InfoCard
+          className="mt-6"
+          title="안내"
+          rows={[
+            { label: "데이터 출처", value: "각 코치 프로필의 padlet_urls" },
+            { label: "페이지당", value: `${PAGE_SIZE}명 (다음 페이지에서 나머지 코치 확인)` },
+            { label: "수정", value: "코치 계정 → Padlet URL 관리에서만 변경 가능" },
+          ]}
         />
       </>
     ),

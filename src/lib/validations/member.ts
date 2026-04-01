@@ -1,4 +1,5 @@
 import { SCHOOLS, SCHOOL_TYPES, GRADES, type SchoolType } from "@/constants/member";
+import type { PadletUrlEntry } from "@/types/member";
 
 const PHONE_REGEX = /^\d{3}-\d{4}-\d{4}$/;
 /** Trimmed local@domain.tld — TLD at least 2 chars, no whitespace. */
@@ -135,5 +136,72 @@ export function validateProfileUpdate(
     errors.push({ field: "affiliation", message: "소속은 필수 항목입니다." });
   }
 
+  return errors;
+}
+
+/** 코치당 Padlet URL 최대 개수 */
+export const MAX_COACH_PADLET_URLS = 20;
+
+const PADLET_ENTRY_ID_REGEX =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+/** DB/클라이언트에서 온 값을 PadletUrlEntry[]로 정규화 */
+export function normalizePadletUrls(raw: unknown): PadletUrlEntry[] {
+  if (!Array.isArray(raw)) return [];
+  const out: PadletUrlEntry[] = [];
+  for (const item of raw) {
+    if (!item || typeof item !== "object") continue;
+    const o = item as Record<string, unknown>;
+    const id = typeof o.id === "string" ? o.id.trim() : "";
+    const url = typeof o.url === "string" ? o.url.trim() : "";
+    if (!id || !url) continue;
+    out.push({ id, url });
+  }
+  return out;
+}
+
+export function validateCoachPadletUrls(entries: PadletUrlEntry[]): ValidationError[] {
+  const errors: ValidationError[] = [];
+  if (entries.length > MAX_COACH_PADLET_URLS) {
+    errors.push({
+      field: "padlet_urls",
+      message: `Padlet 주소는 최대 ${MAX_COACH_PADLET_URLS}개까지 등록할 수 있습니다.`,
+    });
+    return errors;
+  }
+  const seen = new Set<string>();
+  for (let i = 0; i < entries.length; i++) {
+    const e = entries[i];
+    if (!e.id?.trim() || !PADLET_ENTRY_ID_REGEX.test(e.id.trim())) {
+      errors.push({ field: `padlet_urls[${i}].id`, message: "항목 식별자가 올바르지 않습니다." });
+      continue;
+    }
+    const u = e.url?.trim() ?? "";
+    if (!u) {
+      errors.push({ field: `padlet_urls[${i}].url`, message: "URL을 입력해주세요." });
+      continue;
+    }
+    let parsed: URL;
+    try {
+      parsed = new URL(u);
+    } catch {
+      errors.push({ field: `padlet_urls[${i}].url`, message: "올바른 URL 형식이 아닙니다." });
+      continue;
+    }
+    if (parsed.protocol !== "https:") {
+      errors.push({ field: `padlet_urls[${i}].url`, message: "https 주소만 사용할 수 있습니다." });
+      continue;
+    }
+    const host = parsed.hostname.toLowerCase();
+    if (!host.includes("padlet.com")) {
+      errors.push({ field: `padlet_urls[${i}].url`, message: "Padlet(padlet.com) 주소만 등록할 수 있습니다." });
+      continue;
+    }
+    const key = u.toLowerCase();
+    if (seen.has(key)) {
+      errors.push({ field: `padlet_urls[${i}].url`, message: "중복된 URL이 있습니다." });
+    }
+    seen.add(key);
+  }
   return errors;
 }

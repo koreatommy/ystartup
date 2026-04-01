@@ -9,6 +9,7 @@ import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { cn, formatProfileJoinedDate } from "@/lib/utils";
 import type { Profile } from "@/types/member";
+import { normalizePadletUrls } from "@/lib/validations/member";
 import { StudentMenuCharts } from "@/components/member/charts/student/StudentMenuCharts";
 
 interface Props {
@@ -39,7 +40,14 @@ export function StudentContent({ selected, onSelect, profile }: Props) {
         .select("*")
         .eq("id", profile.coach_id)
         .single()
-        .then(({ data }) => setCoach(data as Profile | null));
+        .then(({ data }) => {
+          if (!data) {
+            setCoach(null);
+            return;
+          }
+          const row = data as Profile & { padlet_urls?: unknown };
+          setCoach({ ...row, padlet_urls: normalizePadletUrls(row.padlet_urls) });
+        });
       return;
     }
     setCoach(null);
@@ -107,7 +115,11 @@ export function StudentContent({ selected, onSelect, profile }: Props) {
           <StatCard label="담당 코치" value={coach?.name || "-"} hint="현재 배정" />
           <StatCard label="소속" value={coach?.affiliation || "-"} hint="coach affiliation" />
           <StatCard label="연락처" value={coach?.phone || "-"} hint="조회용" />
-          <StatCard label="변경 권한" value="없음" hint="student 직접 변경 불가" />
+          <StatCard
+            label="Padlet 보드"
+            value={coach ? `${coach.padlet_urls.length}개` : "-"}
+            hint="등록된 링크 수"
+          />
         </div>
         {studentAnalytics}
         <div className="grid gap-6 xl:grid-cols-[1.4fr_1fr]">
@@ -130,8 +142,39 @@ export function StudentContent({ selected, onSelect, profile }: Props) {
               { label: "코치 변경", value: "super_admin 처리 대상" },
               { label: "학생 직접 변경", value: "불가" },
               { label: "조회 범위", value: "본인 정보 + 담당 코치" },
+              { label: "Padlet", value: "코치가 등록한 안내용 링크입니다." },
             ]}
           />
+        </div>
+        <div className="glass mt-6 rounded-2xl p-5">
+          <h3 className="text-lg font-semibold text-[var(--color-text)]">담당 코치 Padlet 링크</h3>
+          <p className="mt-1 text-sm text-[var(--color-text-muted)]">
+            코치가 수업·안내용으로 등록한 Padlet 보드 주소입니다. 새 탭에서 열립니다.
+          </p>
+          {!profile.coach_id ? (
+            <p className="mt-4 text-sm text-[var(--color-text-subtle)]">배정된 담당 코치가 없습니다.</p>
+          ) : !coach ? (
+            <p className="mt-4 text-sm text-[var(--color-text-subtle)]">코치 정보를 불러오는 중입니다…</p>
+          ) : coach.padlet_urls.length === 0 ? (
+            <p className="mt-4 text-sm text-[var(--color-text-subtle)]">
+              등록된 Padlet 주소가 없습니다. 필요 시 코치에게 문의해 주세요.
+            </p>
+          ) : (
+            <ol className="mt-4 list-decimal space-y-3 pl-5 text-sm text-[var(--color-text-secondary)]">
+              {coach.padlet_urls.map((entry) => (
+                <li key={entry.id} className="pl-1">
+                  <a
+                    href={entry.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="break-all font-medium text-[var(--color-primary)] underline-offset-2 hover:underline"
+                  >
+                    {entry.url}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          )}
         </div>
       </>
     ),

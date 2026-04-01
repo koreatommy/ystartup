@@ -206,29 +206,6 @@ export function CoachMenuCharts({ selected, students, pagedStudents }: CoachMenu
         </ChartGrid>
       );
 
-    case "내 정보 조회":
-    case "내 정보 수정":
-      return (
-        <ChartGrid>
-          <ChartShell title="담당 학생 수" description="현재 배정된 담당 학생입니다.">
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={[{ name: "담당 학생", value: students.length }]} margin={{ top: 16, right: 16, left: 16, bottom: 16 }}>
-                <XAxis dataKey="name" tick={{ fill: "#94a3b8", fontSize: 12 }} />
-                <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} allowDecimals={false} />
-                <Tooltip cursor={false} content={<CountTooltip />} />
-                <Bar
-                  activeBar={false}
-                  dataKey="value"
-                  fill={FALLBACK_CHART_HEX[0]}
-                  radius={[6, 6, 0, 0]}
-                  maxBarSize={72}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </ChartShell>
-        </ChartGrid>
-      );
-
     default:
       return null;
   }

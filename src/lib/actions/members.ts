@@ -5,15 +5,21 @@ import { isSupabaseConfigured, missingSupabaseEnvMessage } from "@/lib/supabase/
 import { mapSupabaseAuthErrorMessage } from "@/lib/supabase/auth-errors";
 import { validateProfileUpdate } from "@/lib/validations/member";
 import type {
+  PadletUrlEntry,
   Profile,
   ProfileUpdatePayload,
   PagedResult,
   ListProfilesPagedParams,
   AdminDashboardStats,
 } from "@/types/member";
+import { normalizePadletUrls, validateCoachPadletUrls } from "@/lib/validations/member";
 
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 100;
+
+function mapProfileRow(row: Profile & { padlet_urls?: unknown }): Profile {
+  return { ...row, padlet_urls: normalizePadletUrls(row.padlet_urls) };
+}
 
 function emptyPaged<T>(page: number, pageSize: number): PagedResult<T> {
   return { items: [], total: 0, page, pageSize };
@@ -34,7 +40,7 @@ export async function getCurrentProfile(): Promise<Profile | null> {
     .eq("id", user.id)
     .single();
 
-  return data as Profile | null;
+  return data ? mapProfileRow(data as Profile & { padlet_urls?: unknown }) : null;
 }
 
 export async function getAllMembers() {
@@ -46,7 +52,7 @@ export async function getAllMembers() {
     .order("created_at", { ascending: false });
 
   if (error) return [];
-  return (data || []) as Profile[];
+  return (data || []).map((row) => mapProfileRow(row as Profile & { padlet_urls?: unknown }));
 }
 
 export async function getMembersByRole(role: string) {
@@ -59,7 +65,7 @@ export async function getMembersByRole(role: string) {
     .order("created_at", { ascending: false });
 
   if (error) return [];
-  return (data || []) as Profile[];
+  return (data || []).map((row) => mapProfileRow(row as Profile & { padlet_urls?: unknown }));
 }
 
 export async function getPendingCoaches() {
@@ -73,7 +79,7 @@ export async function getPendingCoaches() {
     .order("created_at", { ascending: false });
 
   if (error) return [];
-  return (data || []) as Profile[];
+  return (data || []).map((row) => mapProfileRow(row as Profile & { padlet_urls?: unknown }));
 }
 
 /** 프로필 목록 페이징 (필터: role, status). 정렬: created_at 내림차순 */
@@ -127,7 +133,7 @@ export async function listProfilesPaged(params: ListProfilesPagedParams = {}): P
   }
 
   return {
-    items: (data || []) as Profile[],
+    items: (data || []).map((row) => mapProfileRow(row as Profile & { padlet_urls?: unknown })),
     total: count ?? 0,
     page,
     pageSize,
@@ -229,7 +235,38 @@ export async function getMyStudents() {
     .order("created_at", { ascending: false });
 
   if (error) return [];
-  return (data || []) as Profile[];
+  return (data || []).map((row) => mapProfileRow(row as Profile & { padlet_urls?: unknown }));
+}
+
+export async function updateMyCoachPadletUrls(
+  entries: PadletUrlEntry[],
+): Promise<{ success?: true; error?: string }> {
+  if (!isSupabaseConfigured()) return { error: missingSupabaseEnvMessage() };
+  const supabase = await createServerSupabase();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "인증되지 않았습니다." };
+
+  const { data: callerProfile, error: profileFetchError } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (profileFetchError || callerProfile?.role !== "coach") {
+    return { error: "코치 계정만 Padlet 주소를 관리할 수 있습니다." };
+  }
+
+  const validationErrors = validateCoachPadletUrls(entries);
+  if (validationErrors.length > 0) {
+    return { error: validationErrors[0].message };
+  }
+
+  const { error } = await supabase.from("profiles").update({ padlet_urls: entries }).eq("id", user.id);
+
+  if (error) return { error: error.message };
+  return { success: true };
 }
 
 export async function updateMemberStatus(memberId: string, status: string) {
