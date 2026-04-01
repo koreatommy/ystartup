@@ -45,17 +45,22 @@ export function DataTable({
       : 0;
 
   return (
-    <div className={cn("glass rounded-2xl p-5", className)}>
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <h3 className="text-lg font-semibold text-[var(--color-text)]">{title}</h3>
-        {actions && <div className="flex gap-2">{actions}</div>}
+    <div className={cn("glass min-w-0 rounded-2xl p-5", className)}>
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h3 className="min-w-0 text-lg font-semibold text-[var(--color-text)]">{title}</h3>
+        {actions && (
+          <div className="flex w-full min-w-0 gap-2 sm:w-auto sm:justify-end">{actions}</div>
+        )}
       </div>
-      <div className="overflow-hidden rounded-xl border border-[var(--glass-border)]">
-        <table className="w-full text-left text-sm">
+      <div className="overflow-x-auto rounded-xl border border-[var(--glass-border)]">
+        <table className="w-full min-w-0 text-left text-sm">
           <thead className="bg-[var(--glass-bg)]">
             <tr>
               {headers.map((h) => (
-                <th key={h} className="px-4 py-3 font-medium text-[var(--color-text-muted)] whitespace-nowrap">
+                <th
+                  key={h}
+                  className="min-w-0 align-top px-4 py-3 font-medium whitespace-normal text-[var(--color-text-muted)] sm:whitespace-nowrap"
+                >
                   {h}
                 </th>
               ))}
@@ -73,7 +78,10 @@ export function DataTable({
                 onClick={onRowClick ? () => onRowClick(i) : undefined}
               >
                 {row.map((cell, j) => (
-                  <td key={j} className="px-4 py-3 text-[var(--color-text-secondary)]">
+                  <td
+                    key={j}
+                    className="min-w-0 break-words px-4 py-3 align-top text-[var(--color-text-secondary)]"
+                  >
                     {cell}
                   </td>
                 ))}
@@ -81,7 +89,10 @@ export function DataTable({
             ))}
             {rows.length === 0 && (
               <tr>
-                <td colSpan={headers.length} className="px-4 py-8 text-center text-[var(--color-text-subtle)]">
+                <td
+                  colSpan={headers.length}
+                  className="px-4 py-8 text-center text-[var(--color-text-subtle)]"
+                >
                   데이터가 없습니다.
                 </td>
               </tr>

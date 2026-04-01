@@ -78,8 +78,8 @@ export function CoachPadletUrlsSection({ profile, selected, analyticsSlot }: Pro
         <StatCard label="프로토콜" value="https" hint="필수" />
       </div>
       {analyticsSlot}
-      <div className="mt-6 grid gap-6 xl:grid-cols-[1.4fr_1fr]">
-        <div className="glass rounded-2xl p-5">
+      <div className="mt-6 grid min-w-0 gap-6 xl:grid-cols-[1.4fr_1fr]">
+        <div className="glass min-w-0 rounded-2xl p-5">
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h3 className="text-lg font-semibold text-[var(--color-text)]">Padlet URL 목록</h3>
             <div className="flex flex-wrap gap-2">
@@ -111,17 +111,19 @@ export function CoachPadletUrlsSection({ profile, selected, analyticsSlot }: Pro
               {entries.map((e, index) => (
                 <li
                   key={e.id}
-                  className="flex flex-col gap-2 rounded-xl border border-[var(--glass-border)] bg-[var(--glass-bg)]/40 p-3 sm:flex-row sm:items-center"
+                  className="flex min-w-0 flex-col gap-2 rounded-xl border border-[var(--glass-border)] bg-[var(--glass-bg)]/40 p-3 sm:flex-row sm:items-center"
                 >
                   <span className="shrink-0 text-xs text-[var(--color-text-subtle)] sm:w-8">{index + 1}</span>
-                  <input
-                    type="url"
-                    value={e.url}
-                    onChange={(ev) => updateUrl(e.id, ev.target.value)}
-                    placeholder="https://padlet.com/…"
-                    className={inputClass()}
-                    autoComplete="off"
-                  />
+                  <div className="min-w-0 flex-1">
+                    <input
+                      type="url"
+                      value={e.url}
+                      onChange={(ev) => updateUrl(e.id, ev.target.value)}
+                      placeholder="https://padlet.com/…"
+                      className={inputClass()}
+                      autoComplete="off"
+                    />
+                  </div>
                   <div className="flex shrink-0 gap-2">
                     {e.url.trim() ? (
                       <a

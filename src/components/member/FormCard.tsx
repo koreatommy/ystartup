@@ -23,8 +23,8 @@ interface FormCardProps {
 export function FormCard({ title, fields, submitLabel, onSubmit, loading, className }: FormCardProps) {
   return (
     <div className={cn("glass rounded-2xl p-5", className)}>
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <h3 className="text-lg font-semibold text-[var(--color-text)]">{title}</h3>
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h3 className="min-w-0 text-lg font-semibold text-[var(--color-text)]">{title}</h3>
         <button
           onClick={onSubmit}
           disabled={loading}

@@ -704,7 +704,7 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
               value={coachSearchKeyword}
               onChange={(e) => setCoachSearchKeyword(e.target.value)}
               placeholder={coachSearchPlaceholder}
-              className="h-10 w-full min-w-[220px] rounded-lg border border-[var(--glass-border)] bg-[var(--glass-bg)] px-3 text-sm text-[var(--color-text)] outline-none transition-colors placeholder:text-[var(--color-text-subtle)] focus:border-[var(--color-primary)] sm:w-[320px]"
+              className="h-10 w-full max-sm:min-w-0 rounded-lg border border-[var(--glass-border)] bg-[var(--glass-bg)] px-3 text-sm text-[var(--color-text)] outline-none transition-colors placeholder:text-[var(--color-text-subtle)] focus:border-[var(--color-primary)] sm:min-w-[200px] sm:w-[320px]"
             />
           }
         />
@@ -740,7 +740,7 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
               <p className="truncate text-xs text-[var(--color-text-subtle)]">{c.email}</p>
             </div>,
             STATUS_LABELS[c.status],
-            <div key={`${c.id}-urls`} className="flex min-w-0 max-w-xl flex-col gap-2">
+            <div key={`${c.id}-urls`} className="flex w-full min-w-0 flex-col gap-2">
               {c.padlet_urls.length === 0 ? (
                 <span className="text-sm text-[var(--color-text-subtle)]">등록된 Padlet 없음</span>
               ) : (
@@ -770,7 +770,7 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
               value={padletCoachSearchKeyword}
               onChange={(e) => setPadletCoachSearchKeyword(e.target.value)}
               placeholder={coachSearchPlaceholder}
-              className="h-10 w-full min-w-[220px] rounded-lg border border-[var(--glass-border)] bg-[var(--glass-bg)] px-3 text-sm text-[var(--color-text)] outline-none transition-colors placeholder:text-[var(--color-text-subtle)] focus:border-[var(--color-primary)] sm:w-[320px]"
+              className="h-10 w-full max-sm:min-w-0 rounded-lg border border-[var(--glass-border)] bg-[var(--glass-bg)] px-3 text-sm text-[var(--color-text)] outline-none transition-colors placeholder:text-[var(--color-text-subtle)] focus:border-[var(--color-primary)] sm:min-w-[200px] sm:w-[320px]"
             />
           }
         />
@@ -823,7 +823,7 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
               value={studentSearchKeyword}
               onChange={(e) => setStudentSearchKeyword(e.target.value)}
               placeholder={studentSearchPlaceholder}
-              className="h-10 w-full min-w-[220px] rounded-lg border border-[var(--glass-border)] bg-[var(--glass-bg)] px-3 text-sm text-[var(--color-text)] outline-none transition-colors placeholder:text-[var(--color-text-subtle)] focus:border-[var(--color-primary)] sm:w-[320px]"
+              className="h-10 w-full max-sm:min-w-0 rounded-lg border border-[var(--glass-border)] bg-[var(--glass-bg)] px-3 text-sm text-[var(--color-text)] outline-none transition-colors placeholder:text-[var(--color-text-subtle)] focus:border-[var(--color-primary)] sm:min-w-[200px] sm:w-[320px]"
             />
           }
         />
@@ -902,7 +902,7 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
                   value={manageCoachSearchKeyword}
                   onChange={(e) => setManageCoachSearchKeyword(e.target.value)}
                   placeholder="코치 검색 (이름/소속/이메일/연락처)"
-                  className="h-10 w-full min-w-[220px] rounded-lg border border-[var(--glass-border)] bg-[var(--glass-bg)] px-3 text-sm text-[var(--color-text)] outline-none transition-colors placeholder:text-[var(--color-text-subtle)] focus:border-[var(--color-primary)] sm:w-[320px]"
+                  className="h-10 w-full max-sm:min-w-0 rounded-lg border border-[var(--glass-border)] bg-[var(--glass-bg)] px-3 text-sm text-[var(--color-text)] outline-none transition-colors placeholder:text-[var(--color-text-subtle)] focus:border-[var(--color-primary)] sm:min-w-[200px] sm:w-[320px]"
                 />
               }
             />
@@ -941,7 +941,7 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
                   value={manageStudentSearchKeyword}
                   onChange={(e) => setManageStudentSearchKeyword(e.target.value)}
                   placeholder="학생 검색 (이름/학교/이메일/연락처)"
-                  className="h-10 w-full min-w-[220px] rounded-lg border border-[var(--glass-border)] bg-[var(--glass-bg)] px-3 text-sm text-[var(--color-text)] outline-none transition-colors placeholder:text-[var(--color-text-subtle)] focus:border-[var(--color-primary)] sm:w-[320px]"
+                  className="h-10 w-full max-sm:min-w-0 rounded-lg border border-[var(--glass-border)] bg-[var(--glass-bg)] px-3 text-sm text-[var(--color-text)] outline-none transition-colors placeholder:text-[var(--color-text-subtle)] focus:border-[var(--color-primary)] sm:min-w-[200px] sm:w-[320px]"
                 />
               }
             />
@@ -1013,7 +1013,7 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
                 value={coachApprovalSearchKeyword}
                 onChange={(e) => setCoachApprovalSearchKeyword(e.target.value)}
                 placeholder={coachSearchPlaceholder}
-                className="h-10 w-full min-w-[220px] rounded-lg border border-[var(--glass-border)] bg-[var(--glass-bg)] px-3 text-sm text-[var(--color-text)] outline-none transition-colors placeholder:text-[var(--color-text-subtle)] focus:border-[var(--color-primary)] sm:w-[320px]"
+                className="h-10 w-full max-sm:min-w-0 rounded-lg border border-[var(--glass-border)] bg-[var(--glass-bg)] px-3 text-sm text-[var(--color-text)] outline-none transition-colors placeholder:text-[var(--color-text-subtle)] focus:border-[var(--color-primary)] sm:min-w-[200px] sm:w-[320px]"
               />
             }
           />

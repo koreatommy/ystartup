@@ -33,10 +33,12 @@ export function InfoCard({ title, rows, actionLabel, onAction, className }: Info
         {rows.map((row) => (
           <div
             key={row.label}
-            className="flex items-center justify-between rounded-xl border border-[var(--glass-border)] bg-[var(--glass-bg)] px-4 py-3"
+            className="flex flex-col gap-1 rounded-xl border border-[var(--glass-border)] bg-[var(--glass-bg)] px-4 py-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4"
           >
-            <span className="text-sm text-[var(--color-text-muted)]">{row.label}</span>
-            <span className="text-sm font-medium text-[var(--color-text)]">{row.value}</span>
+            <span className="shrink-0 text-sm text-[var(--color-text-muted)]">{row.label}</span>
+            <span className="min-w-0 break-words text-sm font-medium text-[var(--color-text)] sm:text-right">
+              {row.value}
+            </span>
           </div>
         ))}
       </div>

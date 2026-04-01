@@ -146,7 +146,7 @@ export function StudentContent({ selected, onSelect, profile }: Props) {
             ]}
           />
         </div>
-        <div className="glass mt-6 rounded-2xl p-5">
+        <div className="glass mt-6 min-w-0 rounded-2xl p-5">
           <h3 className="text-lg font-semibold text-[var(--color-text)]">담당 코치 Padlet 링크</h3>
           <p className="mt-1 text-sm text-[var(--color-text-muted)]">
             코치가 수업·안내용으로 등록한 Padlet 보드 주소입니다. 새 탭에서 열립니다.
@@ -160,7 +160,7 @@ export function StudentContent({ selected, onSelect, profile }: Props) {
               등록된 Padlet 주소가 없습니다. 필요 시 코치에게 문의해 주세요.
             </p>
           ) : (
-            <ol className="mt-4 list-decimal space-y-3 pl-5 text-sm text-[var(--color-text-secondary)]">
+            <ol className="mt-4 list-decimal space-y-3 overflow-x-auto pl-5 text-sm text-[var(--color-text-secondary)]">
               {coach.padlet_urls.map((entry) => (
                 <li key={entry.id} className="pl-1">
                   <a
