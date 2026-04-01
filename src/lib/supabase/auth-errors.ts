@@ -17,5 +17,9 @@ export function mapSupabaseAuthErrorMessage(message?: string): string {
     return "이메일 형식이 올바르지 않습니다.";
   }
 
+  if (normalized.includes("email not confirmed")) {
+    return "이메일 인증이 완료되지 않았습니다.";
+  }
+
   return message;
 }

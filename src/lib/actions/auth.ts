@@ -1,5 +1,6 @@
 "use server";
 
+import type { Session, SupabaseClient } from "@supabase/supabase-js";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { isSupabaseConfigured, missingSupabaseEnvMessage } from "@/lib/supabase/env";
 import {
@@ -12,6 +13,31 @@ import { redirect } from "next/navigation";
 import { DEFAULT_STATUS } from "@/constants/member";
 import { validateCoachSignup, validateStudentSignup } from "@/lib/validations/member";
 import type { StudentSignupPayload, CoachSignupPayload, CoachOption } from "@/types/member";
+
+/** 이메일 확인이 켜진 프로젝트에서는 signUp 직후 세션이 없어 RLS 통과를 위해 세션이 필요합니다. 서비스 롤이 있으면 관리자 클라이언트로 프로필 INSERT를 수행합니다. */
+async function clientForProfileInsertAfterSignup(
+  supabase: SupabaseClient,
+  session: Session | null,
+  email: string,
+  password: string,
+): Promise<{ client: SupabaseClient } | { error: string }> {
+  if (session) {
+    return { client: supabase };
+  }
+  if (hasServiceRoleKey()) {
+    return { client: createAdminSupabase() };
+  }
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+  if (signInError) {
+    return {
+      error: `계정은 생성되었으나 프로필 생성에 실패했습니다. (${mapSupabaseAuthErrorMessage(signInError.message)})`,
+    };
+  }
+  return { client: supabase };
+}
 
 export async function signupStudent(payload: StudentSignupPayload) {
   if (!isSupabaseConfigured()) {
@@ -88,19 +114,18 @@ export async function signupStudent(payload: StudentSignupPayload) {
     return { error: mapSupabaseAuthErrorMessage(authError?.message) };
   }
 
-  if (!authData.session) {
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: data.email,
-      password: data.password,
-    });
-    if (signInError) {
-      return {
-        error: `계정은 생성되었으나 프로필 생성에 실패했습니다. (${mapSupabaseAuthErrorMessage(signInError.message)})`,
-      };
-    }
+  const insertClientResult = await clientForProfileInsertAfterSignup(
+    supabase,
+    authData.session,
+    data.email,
+    data.password,
+  );
+  if ("error" in insertClientResult) {
+    return { error: insertClientResult.error };
   }
+  const { client: profileClient } = insertClientResult;
 
-  const { error: profileError } = await supabase.from("profiles").insert({
+  const { error: profileError } = await profileClient.from("profiles").insert({
     id: authData.user.id,
     role: "student",
     status: DEFAULT_STATUS.student,
@@ -181,19 +206,18 @@ export async function signupCoach(payload: CoachSignupPayload) {
     return { error: mapSupabaseAuthErrorMessage(authError?.message) };
   }
 
-  if (!authData.session) {
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: data.email,
-      password: data.password,
-    });
-    if (signInError) {
-      return {
-        error: `계정은 생성되었으나 프로필 생성에 실패했습니다. (${mapSupabaseAuthErrorMessage(signInError.message)})`,
-      };
-    }
+  const insertClientResult = await clientForProfileInsertAfterSignup(
+    supabase,
+    authData.session,
+    data.email,
+    data.password,
+  );
+  if ("error" in insertClientResult) {
+    return { error: insertClientResult.error };
   }
+  const { client: profileClient } = insertClientResult;
 
-  const { error: profileError } = await supabase.from("profiles").insert({
+  const { error: profileError } = await profileClient.from("profiles").insert({
     id: authData.user.id,
     role: "coach",
     status: DEFAULT_STATUS.coach,
