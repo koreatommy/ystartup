@@ -2,14 +2,21 @@
   "name": "ystart",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "create-super-admin": "node scripts/create-super-admin.mjs",
+    "seed-dummy-members": "node scripts/seed-dummy-members.mjs",
+    "reset-coach-student-passwords": "node scripts/reset-coach-student-passwords.mjs"
   },
   "dependencies": {
-    "@radix-ui/react-slot": "^1.2.4",
+    "@supabase/ssr": "^0.10.0",
+    "@supabase/supabase-js": "^2.101.1",
     "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -21,6 +28,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "recharts": "^3.7.0",
+    "server-only": "^0.0.1",
     "tailwind-merge": "^3.4.1"
   },
   "devDependencies": {

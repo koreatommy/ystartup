@@ -48,6 +48,10 @@ next-env.d.ts
 
 # Cursor
 .cursor/
+.playwright-mcp/
 
 # 기타 로그
 *.log
+
+# Supabase local temp artifacts
+supabase/.temp/

@@ -12,6 +12,8 @@ import { MobileNav } from "./MobileNav";
 export function DashboardLayout({
   selectedId,
   onSelect,
+  memberAreaHref,
+  memberAreaLabel,
 }: DashboardLayoutProps) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const scrollContainerRef = useRef<HTMLElement>(null);
@@ -28,6 +30,8 @@ export function DashboardLayout({
           onMenuClick={() => setMobileNavOpen(true)}
           onIndexClick={() => onSelect("")}
           isMenuOpen={mobileNavOpen}
+          memberAreaHref={memberAreaHref}
+          memberAreaLabel={memberAreaLabel}
         />
 
         {/* 메인 콘텐츠 */}
@@ -53,6 +57,8 @@ export function DashboardLayout({
         onClose={() => setMobileNavOpen(false)}
         selectedId={selectedId}
         onSelect={onSelect}
+        memberAreaHref={memberAreaHref}
+        memberAreaLabel={memberAreaLabel}
       />
     </div>
   );

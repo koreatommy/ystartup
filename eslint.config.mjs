@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Project-specific non-runtime artifacts:
+    "docs/**",
+    "data/annotations/**",
+    ".playwright-mcp/**",
   ]),
 ]);
 

@@ -1,0 +1,181 @@
+# Y-START · 서비스 랜딩 페이지 Design PRD
+
+**문서 목적**: 본 저장소(Next.js 워크북 앱 **YStart**)의 실제 기능·콘텐츠·UI 자산을 기준으로, 서비스 랜딩 페이지의 정보 구조와 구성 요소를 정의한다.  
+**기준 코드베이스**: `src/app/page.tsx`, `src/components/dashboard/DashboardHome.tsx`, `src/content/landing.ts`, `src/data/workbooks.ts`, `src/data/chapters.ts`, PDF 편집기·Root Hunter 관련 모듈.
+
+---
+
+## 1. 제품 요약 (프로젝트 기반)
+
+| 항목 | 내용 |
+|------|------|
+| **서비스명** | Y-START (헤더·홈 카피: *Y-START 창업 교육*) |
+| **한 줄 정의** | 청소년 창업 교육 **10단계 워크북**을 디지털로 탐색·실습할 수 있는 **Next.js 워크북 관리 웹앱** |
+| **핵심 가치** | 아이디어→실행까지의 **로드맵**을 단계별로 안내하고, PDF 워크북 열람·주석·저장, 보조 학습(5 Whys 게임)을 한 화면 흐름에 제공 |
+| **스택** | Next.js 16, React 19, Tailwind 4, PDF.js, Recharts(간트·BEP 시각화), 주석 API·로컬 JSON 저장 |
+
+**교육 프레임**: `src/data/chapters.ts` 및 `src/content/landing.ts`에 정의된 **10회차 커리큘럼**(팀 빌딩 → 아이디어·5 Whys → 시장·페르소나 → 공감·SCAMPER → MVP → BMC → 4P/4C → 운영·역할 → 재무·BEP → 피칭).
+
+---
+
+## 2. 현재 앱 구조와 “랜딩”의 위치
+
+- **진입 URL (`/`)**: 마케팅 전용 페이지가 아니라 **`DashboardLayout` + `MainContent`**로, `chapterId === ""`일 때 **`DashboardHome`**이 노출된다. 즉 **현재 “랜딩”은 대시보드 홈**이 그 역할을 한다.
+- **별도 라우트**: `/root-hunter` — 워크북 WB02 연계 **5 Whys 인터랙티브**(뿌리를 찾아라).
+- **준비된 마케팅용 블록**: `src/components/landing/*` + `src/content/landing.ts`는 **히어로·커리큘럼·단계별 롱폼·CTA** 데이터가 있으나, **`page.tsx`에서 미사용**. 랜딩을 분리·확장할 때 **콘텐츠 단일 소스로 재사용** 가능.
+
+**PRD 결론**: “서비스 랜딩”은 (A) **현 홈을 랜딩으로 정제**하거나 (B) **`/welcome` 등 신규 경로**에 `landing` 컴포넌트를 배치하는 두 가지 중 하나로 구현 전략을 택한다. 아래 섹션 구성은 **두 경우 모두** 프로젝트 실체에 맞게 정렬한다.
+
+---
+
+## 3. 타깃 사용자
+
+- **1차**: 청소년 창업 교육 과정 수강자(팀 단위 학습 가정).
+- **2차**: 교사·운영자(교실에서 PDF 실습·진도·보조 앱 연계).
+- **암시적 니즈**: 단계별 워크북 PDF 접근, 필기·도형 주석, 진행감(타임라인·통계), WB02의 **Root Hunter**로 5 Whys 체득.
+
+---
+
+## 4. 랜딩 페이지 목표
+
+1. **무엇을 하는 서비스인지** 10초 안에 이해(10단계 창업 여정 + 워크북 디지털 허브).
+2. **첫 행동 유도**: 1단계 워크북 또는 추천 학습(현 `DashboardHome` CTA 패턴과 일치).
+3. **차별 요소 노출**: 브라우저 내 **PDF 편집기**(펜·형광펜·텍스트·도형·저장/다운로드), **Root Hunter** 링크.
+4. **신뢰·완성도**: 로드맵 이미지(`public/roadmap-6steps.png`), 챕터별 컬러 바(`chapters[].color`), 다크 모드 대응 헤더.
+
+---
+
+## 5. 권장 정보 구조 (섹션 순서)
+
+아래 순서는 **프로젝트에 이미 있는 카피·기능**을 랜딩 스토리로 재배열한 것이다.
+
+### 5.1 Hero (히어로)
+
+| 요소 | 소스·방향 |
+|------|-----------|
+| **헤드라인** | `DashboardHome` / `landingHero.title`: *꿈을 현실로 만드는 창업 여정* |
+| **서브** | *아이디어에서 실행까지의 로드맵* (`landingHero.subtitle`과 동일 메시지) |
+| **리드 문단** | `landingHero.intro` 또는 홈에 있는 청소년 대상 설명(창의성·도전·협업, 10단계 지도) |
+| **1차 CTA** | *1단계부터 시작하기* → `onSelect("01")` / 라우트 분리 시 `/learn/01` 또는 앵커 `#curriculum` |
+| **보조 CTA** (선택) | *워크북에서 시작하기* (`landingCta.ctaLabel`) — 현재 카피와 통일 |
+
+**UI 참고**: `glass`, `text-gradient-primary`, `btn-gradient`, `Sparkles`·`Rocket` 아이콘 패턴 (`DashboardHome`).
+
+### 5.2 제품 기능 하이라이트 (3~4 카드)
+
+코드에 존재하는 **실제 기능**만 나열한다.
+
+| 카드 | 제목(예) | 설명 근거 |
+|------|----------|-----------|
+| **10단계 워크북** | `chapters` 10개, 회차별 한·영 제목, 사이드바·타임라인 네비 |
+| **PDF 실습** | `PdfEditorModal` — PDF.js 뷰어, 주석 레이어, 서버 저장·jspdf 다운로드 (`PDF_EDITOR_README.md`) |
+| **학습 보조** | WB02 항목에서 `/root-hunter` 진입, 5 Whys 시각화·팀 모드·시나리오 (`workbooks.ts` `description`) |
+| **단계별 인사이트** | `WorkbookCard` — 요약 본문, 표·체크리스트, **GanttChartExample**(WB08), **BepChart**(WB09), WB10 컨페티 |
+
+### 5.3 로드맵·진행 시각화
+
+| 요소 | 소스 |
+|------|------|
+| **로드맵 이미지** | `ROADMAP_IMG_SRC` — `/roadmap-6steps.png`, 확대 모달(줌) |
+| **10단계 타임라인** | `Timeline` + `chapters` |
+| **진행 요약** | `QuickStats` (총 단계·완료·진행 중; 현재 목 데이터이므로 랜딩 카피에서는 “나의 진행”으로 소개하거나 추후 연동 명시) |
+
+### 5.4 커리큘럼 개요 (10회차 한눈에)
+
+| 요소 | 소스 |
+|------|------|
+| **인트로** | `landingCurriculumIntro` (title, paragraphs, outro) |
+| **회차 리스트** | `curriculumItems` — `session`, `titleKo`, `titleEn` |
+| **UI** | `LandingCurriculum` 컴포넌트 재사용 또는 동일 데이터로 그리드/아코디언 구현 |
+
+### 5.5 단계별 심화 스토리 (선택·롱폼)
+
+- **대상**: 스크롤 깊은 사용자·교사용 요약.
+- **소스**: `landingSections` (단계 0~9, WB 01~10 매핑, 표·하이라이트·체크리스트).
+- **UI**: `LandingSteps` + `ContentBlock` + `DataTable`.
+- **주의**: 홈만 짧게 유지할 경우 이 블록은 `/about` 또는 “커리큘럼 더보기”로 분리.
+
+### 5.6 추천 학습 / 빠른 시작
+
+- **현 구현**: `DashboardHome`의 *추천 학습* — `chapters` 상위 3개 카드.
+- **랜딩 권장**: 동일 패턴 유지 또는 1·2·3단계 고정 + “전체 목록은 사이드바에서” 안내.
+
+### 5.7 사회적 증거·파트너 (선택)
+
+- 코드베이스에 고정 문구 없음. 교육 기관 로고·후기는 **외부 자산 확보 시** 추가. PRD 상 placeholder만 명시.
+
+### 5.8 Footer CTA
+
+| 요소 | 소스 |
+|------|------|
+| **카피** | `landingCta.title`, `landingCta.message` |
+| **버튼** | `landingCta.ctaLabel` → 앱 메인 또는 1단계 딥링크 |
+
+### 5.9 글로벌 UI
+
+- **헤더**: `Header` — 테마 토글, 모바일 메뉴, Y-START 브랜딩.
+- **네비**: `Sidebar` / `MobileNav` — 10챕터 색상 바(`chapter.color`).
+- **접근성**: 로드맵 `aria-label`, 다이얼로그 `role="dialog"` 등 기존 패턴 유지.
+
+---
+
+## 6. 구성요소 ↔ 코드 매핑
+
+| 랜딩 블록 | 재사용 컴포넌트·데이터 |
+|-----------|------------------------|
+| Hero | `LandingHero` 또는 `DashboardHome` 상단 섹션 스타일 |
+| 기능 카드 | 신규 소형 카드 3~4개 (카피만 PRD 기준, 디자인은 `glass`·`card-hover`) |
+| 로드맵+타임라인 | `DashboardHome` 중단 그리드 그대로 또는 축약 |
+| 10회차 목록 | `LandingCurriculum`, `curriculumItems` |
+| 롱폼 단계 | `LandingSteps`, `landingSections` |
+| 하단 CTA | `LandingCta` |
+| (앱 내부) 워크북 상세 | `WorkbookCard`, `WorkbookItemThumbnail`, `PdfEditorModal` |
+
+---
+
+## 7. 디자인 가이드 (프로젝트 일관성)
+
+- **레이아웃**: 메인 `max-w-[1248px]`, 패딩 `px-4 md:px-6 lg:px-8`, 세로 리듬 `space-y-8` 수준 (`DashboardLayout`/`DashboardHome` 기준).
+- **서피스**: `glass`, `glass-border`, 그라디언트 버튼 `btn-gradient` / `gradient-primary`.
+- **타이포**: `font-sidebar` 헤드라인, 본문 `text-[var(--color-text-secondary)]`.
+- **챕터 색**: CSS 변수 `var(--color-bar-01)` … `var(--color-bar-10)` — 랜딩에서 회차 칩·구분선에 동일 토큰 사용.
+- **모션**: WB10 진입 시 컨페티는 워크북 상세에만 적용; 랜딩 히어로는 과하지 않게.
+
+---
+
+## 8. 콘텐츠 원칙
+
+1. **교육 카피**는 `landing.ts`·`workbooks.ts`의 **한국어/영문 병기** 정책을 유지할지 랜딩에서는 한국어 위주로 줄일지 결정(타깃이 국내면 히어로는 KO, 상세는 EN 서브타이틀).
+2. **기능 주장**은 구현된 것만: “AI 자동 채점” 등 코드에 없는 문구 금지.
+3. **Root Hunter**는 “WB2-②와 연결된 보조 활동”으로 명시해 학습 맥락을 분명히 한다.
+
+---
+
+## 9. 라우팅·구현 옵션 (개발 참고)
+
+| 옵션 | 설명 |
+|------|------|
+| **A. 홈 단일** | `/` = 지금처럼 `DashboardHome`을 랜딩으로 다듬고, `landingSections`는 접이식 “전체 커리큘럼”에만 삽입 |
+| **B. 분리 랜딩** | `/`를 마케팅용으로 두고 `/app` 또는 `/learn`에 대시보드 이동 — 인증·SEO 정책에 맞게 조정 |
+| **C. 하이브리드** | `/` 상단에 `LandingHero` + 기능 카드 + CTA, 하단은 기존 로드맵·추천 학습 |
+
+---
+
+## 10. 오픈 이슈 (백로그)
+
+- [ ] `QuickStats`의 `MOCK_*`를 실제 진행률(로컬 스토리지·계정)과 연동 시 랜딩/홈 카피 업데이트.
+- [ ] `landing/*`와 `DashboardHome`의 **중복 카피**를 `src/content/landing.ts` 단일 소스로 통합할지 결정.
+- [ ] SEO: `layout.tsx` 메타 타이틀·설명에 “10단계 청소년 창업 워크북” 반영.
+- [ ] OG 이미지: 로드맵 또는 브랜드 썸네일.
+
+---
+
+## 11. 문서 이력
+
+| 날짜 | 내용 |
+|------|------|
+| 2025-03-22 | 초안: 저장소 분석 기반 랜딩 IA·컴포넌트 매핑 작성 |
+
+---
+
+*본 PRD는 저장소 내 실제 파일·문자열을 기준으로 작성되었으며, 마케팅 문구 최종 확정은 교육 운영 주체와의 검수를 권장한다.*

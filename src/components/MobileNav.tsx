@@ -1,16 +1,19 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { chapters } from "@/data/chapters";
 import { useTheme } from "@/hooks/useTheme";
-import { X, Moon, Sun, Home, Sparkles } from "lucide-react";
+import { X, Moon, Sun, Home, Sparkles, User } from "lucide-react";
 
 interface MobileNavProps {
   isOpen: boolean;
   onClose: () => void;
   selectedId: string;
   onSelect: (id: string) => void;
+  memberAreaHref?: string;
+  memberAreaLabel?: string;
 }
 
 export function MobileNav({
@@ -18,6 +21,8 @@ export function MobileNav({
   onClose,
   selectedId,
   onSelect,
+  memberAreaHref,
+  memberAreaLabel = "회원 정보",
 }: MobileNavProps) {
   const { toggleTheme, isDark, mounted } = useTheme();
 
@@ -160,8 +165,20 @@ export function MobileNav({
           </div>
         </nav>
 
-        {/* 하단 - 다크모드 토글 */}
-        <div className="shrink-0 border-t border-[var(--glass-border)] p-4">
+        {/* 하단 - 회원 정보 + 다크모드 토글 */}
+        <div className="shrink-0 space-y-2 border-t border-[var(--glass-border)] p-4">
+          {memberAreaHref && (
+            <Link
+              href={memberAreaHref}
+              onClick={onClose}
+              className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-[var(--color-text-secondary)] transition-all hover:bg-[var(--glass-bg-hover)] hover:text-[var(--color-text)]"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--glass-bg)]">
+                <User className="h-5 w-5" />
+              </div>
+              <span className="font-sidebar font-medium">{memberAreaLabel}</span>
+            </Link>
+          )}
           <button
             type="button"
             onClick={toggleTheme}

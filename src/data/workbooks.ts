@@ -308,6 +308,12 @@ const workbook04Items: WorkbookContent["items"] = [
     subtitle: "Solution development (SCAMPER)",
     pdfPath: "/pdf/04_workbook_ori_부분6.pdf",
     thumbnailPath: "/pdf/thumbnails/04_workbook_ori_부분6.jpg",
+    href: "/scamper",
+    description:
+      "💡 SCAMPER 창의적 사고 게임\n\n" +
+      "【7가지 관점】 S 대체 · C 결합 · A 적용 · M 수정 · P 다른 용도 · E 제거 · R 거꾸로\n\n" +
+      "【주요 기능】 기법 배우기(카드) · 퀴즈(셔플·힌트·연속 정답·등급) · 창의력 챌린지(주제별 아이디어 저장) · 갤러리·초기화\n\n" +
+      "【교실 활용】 워크북 SCAMPER 작성 전에 게임으로 익힌 뒤, 팀별 주제를 나눠 발표하기",
   },
   {
     label: "WB4-⑦·⑧ 고객에게 줄 가치(Value Proposition) · 발표 준비",

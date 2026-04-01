@@ -1,14 +1,29 @@
-"use client";
+import { redirect } from "next/navigation";
+import { getCurrentProfile } from "@/lib/actions/members";
+import { WorkbookDashboard } from "@/components/WorkbookDashboard";
 
-import { useState } from "react";
-import { DashboardLayout } from "@/components/DashboardLayout";
+export const dynamic = "force-dynamic";
 
-export default function Home() {
-  const [selectedId, setSelectedId] = useState("");
+export default async function Home() {
+  const profile = await getCurrentProfile();
 
-  return (
-    <div className="h-full w-full">
-      <DashboardLayout selectedId={selectedId} onSelect={setSelectedId} />
-    </div>
-  );
+  if (!profile) {
+    redirect("/login");
+  }
+
+  if (profile.status !== "approved") {
+    redirect("/pending");
+  }
+
+  const roleRoutes: Record<string, string> = {
+    super_admin: "/admin",
+    coach: "/coach",
+    student: "/student",
+  };
+
+  const role =
+    typeof profile.role === "string" ? profile.role.trim() : String(profile.role);
+  const memberAreaHref = roleRoutes[role] || "/login";
+
+  return <WorkbookDashboard memberAreaHref={memberAreaHref} />;
 }

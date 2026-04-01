@@ -4,6 +4,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { QuickStats } from "./QuickStats";
 import { Timeline } from "./Timeline";
+import { LearningGamesIntro } from "./LearningGamesIntro";
 import { Rocket, Sparkles, ArrowRight, ZoomIn, X } from "lucide-react";
 import { chapters } from "@/data/chapters";
 
@@ -137,38 +138,7 @@ export function DashboardHome({
         </div>
       </section>
 
-      {/* 빠른 시작 섹션 */}
-      <section className="glass rounded-2xl p-6">
-        <h2 className="mb-4 font-sidebar text-lg font-semibold text-[var(--color-text)]">
-          추천 학습
-        </h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {chapters.slice(0, 3).map((chapter) => (
-            <button
-              key={chapter.id}
-              type="button"
-              onClick={() => onSelect(chapter.id)}
-              className="group flex items-start gap-4 rounded-xl bg-[var(--glass-bg)] p-4 text-left transition-all hover:bg-[var(--glass-bg-hover)] card-hover"
-            >
-              <div
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-white shadow-lg"
-                style={{ backgroundColor: chapter.color }}
-              >
-                <span className="text-lg font-bold">{chapter.id}</span>
-              </div>
-              <div className="min-w-0 flex-1">
-                <h3 className="font-sidebar font-medium text-[var(--color-text)] group-hover:text-[var(--color-primary)] transition-colors">
-                  {chapter.titleKo}
-                </h3>
-                <p className="mt-1 text-sm text-[var(--color-text-muted)] truncate">
-                  {chapter.titleEn}
-                </p>
-              </div>
-              <ArrowRight className="h-5 w-5 shrink-0 text-[var(--color-text-muted)] opacity-0 transition-all group-hover:opacity-100 group-hover:text-[var(--color-primary)]" />
-            </button>
-          ))}
-        </div>
-      </section>
+      <LearningGamesIntro />
     </div>
   );
 }

@@ -1,22 +1,35 @@
 "use client";
 
+import Link from "next/link";
 import { useTheme } from "@/hooks/useTheme";
-import { Menu, Moon, Sun, Sparkles } from "lucide-react";
+import { WORKBOOK_QUOTES } from "@/constants/quotes";
+import { QuoteTicker } from "@/components/QuoteTicker";
+import { Moon, Sun, Sparkles, User } from "lucide-react";
 
 interface HeaderProps {
   onMenuClick?: () => void;
   onIndexClick?: () => void;
   /** 슬라이드 메뉴 열림 여부 (매뉴 버튼에 열기/닫기 표시용) */
   isMenuOpen?: boolean;
+  /** 회원 정보 페이지 href (역할에 따라 /admin, /coach, /student) */
+  memberAreaHref?: string;
+  /** 회원 정보 버튼 라벨 (기본: "회원 정보") */
+  memberAreaLabel?: string;
 }
 
-export function Header({ onMenuClick, onIndexClick, isMenuOpen = false }: HeaderProps) {
+export function Header({
+  onMenuClick,
+  onIndexClick,
+  isMenuOpen = false,
+  memberAreaHref,
+  memberAreaLabel = "회원 정보",
+}: HeaderProps) {
   const { toggleTheme, isDark, mounted } = useTheme();
 
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between border-b border-[var(--glass-border)] bg-[var(--sidebar-bg)] backdrop-blur-xl px-4 md:px-6">
+    <header className="flex h-16 shrink-0 items-center gap-3 border-b border-[var(--glass-border)] bg-[var(--sidebar-bg)] backdrop-blur-xl px-4 md:gap-4 md:px-6">
       {/* 로고/인덱스 버튼 (모바일에서만 보임 - 데스크톱은 사이드바에 있음) */}
-      <div className="flex items-center gap-3 md:hidden">
+      <div className="flex shrink-0 items-center gap-3 md:hidden">
         {onIndexClick ? (
           <button
             type="button"
@@ -43,11 +56,27 @@ export function Header({ onMenuClick, onIndexClick, isMenuOpen = false }: Header
         )}
       </div>
 
-      {/* 데스크톱: 빈 공간 또는 검색/브레드크럼 등 추가 가능 */}
-      <div className="hidden md:block" />
+      {/* 데스크톱: 중앙 격언 티커 */}
+      <div className="hidden min-w-0 flex-1 justify-center px-2 md:flex">
+        <QuoteTicker quotes={WORKBOOK_QUOTES} />
+      </div>
 
-      {/* 오른쪽 액션 영역 */}
-      <div className="flex items-center gap-2">
+      {/* 오른쪽 액션 영역: 회원 정보 → 테마 → (모바일) 매뉴 */}
+      <div className="ml-auto flex shrink-0 items-center gap-2">
+        {/* 회원 정보 링크 (데스크톱: 아이콘+라벨, 모바일: 아이콘만) */}
+        {memberAreaHref && (
+          <Link
+            href={memberAreaHref}
+            className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-[var(--color-text-muted)] transition-all hover:bg-[var(--glass-bg-hover)] hover:text-[var(--color-text)]"
+            aria-label={memberAreaLabel}
+          >
+            <User className="h-5 w-5" />
+            <span className="hidden text-sm font-medium md:inline">
+              {memberAreaLabel}
+            </span>
+          </Link>
+        )}
+
         {/* 다크모드 토글 (데스크톱에서만 - 모바일은 MobileNav에 있음) */}
         <button
           type="button"
