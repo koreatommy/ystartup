@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn, formatProfileJoinedDate } from "@/lib/utils";
 import {
   GRADES,
   ROLE_LABELS,
@@ -121,6 +121,9 @@ export function AdminMemberProfileEditor({
           <h3 className="text-lg font-semibold text-[var(--color-text)]">회원 정보 수정</h3>
           <p className="mt-1 text-sm text-[var(--color-text-muted)]">
             역할: {ROLE_LABELS[member.role]} · ID: {member.id.slice(0, 8)}…
+          </p>
+          <p className="mt-1 text-sm text-[var(--color-text-subtle)]">
+            가입일: {formatProfileJoinedDate(member.created_at)} <span className="text-[var(--color-text-muted)]">(변경 불가)</span>
           </p>
         </div>
         <div className="flex flex-wrap gap-2">

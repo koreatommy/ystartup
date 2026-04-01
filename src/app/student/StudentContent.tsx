@@ -7,7 +7,7 @@ import { STATUS_LABELS } from "@/constants/member";
 import { updateMyProfile } from "@/lib/actions/members";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
-import { cn } from "@/lib/utils";
+import { cn, formatProfileJoinedDate } from "@/lib/utils";
 import type { Profile } from "@/types/member";
 import { StudentMenuCharts } from "@/components/member/charts/student/StudentMenuCharts";
 
@@ -83,6 +83,7 @@ export function StudentContent({ selected, onSelect, profile }: Props) {
               { label: "연락처", value: profile.phone },
               { label: "이메일", value: profile.email },
               { label: "학교", value: `${profile.school_name || "-"} / ${profile.grade || "-"}` },
+              { label: "가입일", value: formatProfileJoinedDate(profile.created_at) },
             ]}
             actionLabel="내 정보 수정"
             onAction={() => onSelect("연락처/이메일 수정")}
@@ -117,6 +118,10 @@ export function StudentContent({ selected, onSelect, profile }: Props) {
               { label: "소속", value: coach?.affiliation || "-" },
               { label: "연락처", value: coach?.phone || "-" },
               { label: "이메일", value: coach?.email || "-" },
+              {
+                label: "담당 코치 가입일",
+                value: coach?.created_at ? formatProfileJoinedDate(coach.created_at) : "-",
+              },
             ]}
           />
           <InfoCard

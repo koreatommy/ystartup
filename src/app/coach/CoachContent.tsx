@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { SectionHeader, StatCard, InfoCard, DataTable, FormCard, PasswordChangeSection } from "@/components/member";
 import { STATUS_LABELS } from "@/constants/member";
 import { getMyStudents, updateMyProfile } from "@/lib/actions/members";
-import { cn } from "@/lib/utils";
+import { cn, formatProfileJoinedDate } from "@/lib/utils";
 import type { Profile } from "@/types/member";
 import { CoachMenuCharts } from "@/components/member/charts/coach/CoachMenuCharts";
 
@@ -140,6 +140,7 @@ export function CoachContent({ selected, onSelect, profile }: Props) {
               { label: "소속", value: profile.affiliation || "-" },
               { label: "연락처", value: profile.phone },
               { label: "이메일", value: profile.email },
+              { label: "가입일", value: formatProfileJoinedDate(profile.created_at) },
             ]}
             actionLabel="내 정보 수정"
             onAction={() => onSelect("내 정보 수정")}
@@ -169,8 +170,14 @@ export function CoachContent({ selected, onSelect, profile }: Props) {
         <div className="grid gap-6 xl:grid-cols-[1.4fr_1fr]">
           <DataTable
             title="담당 학생 현황"
-            headers={["이름", "학교", "학년", "상태"]}
-            rows={overviewPaged.rows.map((s) => [s.name, s.school_name || "-", s.grade || "-", STATUS_LABELS[s.status]])}
+            headers={["가입일", "이름", "학교", "학년", "상태"]}
+            rows={overviewPaged.rows.map((s) => [
+              formatProfileJoinedDate(s.created_at),
+              s.name,
+              s.school_name || "-",
+              s.grade || "-",
+              STATUS_LABELS[s.status],
+            ])}
             pagination={{
               page: overviewPage,
               pageSize: COACH_LIST_PAGE_SIZE,
@@ -202,9 +209,9 @@ export function CoachContent({ selected, onSelect, profile }: Props) {
         {coachAnalytics}
         <DataTable
           title="최근 등록 학생"
-          headers={["등록일", "이름", "학교", "학년"]}
+          headers={["가입일", "이름", "학교", "학년"]}
           rows={recentSignupPaged.rows.map((s) => [
-            new Date(s.created_at).toLocaleDateString("ko-KR"),
+            formatProfileJoinedDate(s.created_at),
             s.name,
             s.school_name || "-",
             s.grade || "-",
@@ -243,8 +250,15 @@ export function CoachContent({ selected, onSelect, profile }: Props) {
             <div className="grid gap-6 xl:grid-cols-[1.4fr_1fr]">
               <DataTable
                 title="담당 학생 목록"
-                headers={["이름", "학교", "학년", "연락처", "이메일"]}
-                rows={assignedListPaged.rows.map((s) => [s.name, s.school_name || "-", s.grade || "-", s.phone, s.email])}
+                headers={["가입일", "이름", "학교", "학년", "연락처", "이메일"]}
+                rows={assignedListPaged.rows.map((s) => [
+                  formatProfileJoinedDate(s.created_at),
+                  s.name,
+                  s.school_name || "-",
+                  s.grade || "-",
+                  s.phone,
+                  s.email,
+                ])}
                 selectedRowIndex={assignedListPaged.rows.findIndex((s) => s.id === selectedStudentId)}
                 onRowClick={(rowIndex) => {
                   const row = assignedListPaged.rows[rowIndex];
@@ -262,6 +276,7 @@ export function CoachContent({ selected, onSelect, profile }: Props) {
                   <InfoCard
                     title="학생 상세 정보"
                     rows={[
+                      { label: "가입일", value: formatProfileJoinedDate(selectedStudent.created_at) },
                       { label: "이름", value: selectedStudent.name },
                       { label: "연락처", value: selectedStudent.phone },
                       { label: "이메일", value: selectedStudent.email },

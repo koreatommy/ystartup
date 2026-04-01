@@ -22,6 +22,7 @@ import {
   getSchoolCoachAssignments,
 } from "@/lib/actions/members";
 import type { Profile, PagedResult, AdminDashboardStats, ProfileUpdatePayload } from "@/types/member";
+import { formatProfileJoinedDate } from "@/lib/utils";
 import { AdminMenuCharts } from "@/components/member/charts/admin/AdminMenuCharts";
 
 interface Props {
@@ -510,8 +511,9 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
         <div className="flex flex-col gap-6">
           <DataTable
             title="최근 가입자"
-            headers={["이름", "역할", "학교/소속", "상태"]}
+            headers={["가입일", "이름", "역할", "학교/소속", "상태"]}
             rows={dashRecent.map((m) => [
+              formatProfileJoinedDate(m.created_at),
               m.name,
               ROLE_LABELS[m.role],
               m.school_name || m.affiliation || "-",
@@ -544,8 +546,9 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
         <div className="flex flex-col gap-6">
           <DataTable
             title="코치 승인 대기 목록"
-            headers={["이름", "소속", "연락처", "이메일", "처리"]}
+            headers={["가입일", "이름", "소속", "연락처", "이메일", "처리"]}
             rows={pendingPaged.items.map((c) => [
+              formatProfileJoinedDate(c.created_at),
               c.name,
               c.affiliation || "-",
               c.phone,
@@ -592,7 +595,7 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
           title="최근 가입자 목록"
           headers={["가입일", "이름", "역할", "이메일", "상태"]}
           rows={recentPaged.items.map((m) => [
-            new Date(m.created_at).toLocaleDateString("ko-KR"),
+            formatProfileJoinedDate(m.created_at),
             m.name,
             ROLE_LABELS[m.role],
             m.email,
@@ -620,8 +623,9 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
         {analyticsSection}
         <DataTable
           title="전체 회원 목록"
-          headers={["이름", "역할", "학교/소속", "상태", "이메일"]}
+          headers={["가입일", "이름", "역할", "학교/소속", "상태", "이메일"]}
           rows={allMembersPaged.items.map((m) => [
+            formatProfileJoinedDate(m.created_at),
             m.name,
             ROLE_LABELS[m.role],
             m.school_name || m.affiliation || "-",
@@ -650,8 +654,9 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
         {analyticsSection}
         <DataTable
           title="코치 목록"
-          headers={["이름", "소속", "상태", "연락처"]}
+          headers={["가입일", "이름", "소속", "상태", "연락처"]}
           rows={coachesPaged.items.map((c) => [
+            formatProfileJoinedDate(c.created_at),
             c.name,
             c.affiliation || "-",
             STATUS_LABELS[c.status],
@@ -688,8 +693,9 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
         {analyticsSection}
         <DataTable
           title="학생 목록"
-          headers={["이름", "학교", "학년", "담당 코치", "상태"]}
+          headers={["가입일", "이름", "학교", "학년", "담당 코치", "상태"]}
           rows={studentsPaged.items.map((s) => [
+            formatProfileJoinedDate(s.created_at),
             s.name,
             s.school_name || "-",
             s.grade || "-",
@@ -720,6 +726,7 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
           <InfoCard
             title="회원 상세 정보"
             rows={[
+              { label: "가입일", value: formatProfileJoinedDate(selectedStudent.created_at) },
               { label: "이름", value: selectedStudent.name },
               { label: "역할", value: ROLE_LABELS[selectedStudent.role] },
               { label: "연락처", value: selectedStudent.phone },
@@ -758,8 +765,9 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
           <div className="space-y-6">
             <DataTable
               title="코치 목록"
-              headers={["이름", "소속", "상태", "연락처"]}
+              headers={["가입일", "이름", "소속", "상태", "연락처"]}
               rows={manageCoachesPaged.items.map((c) => [
+                formatProfileJoinedDate(c.created_at),
                 c.name,
                 c.affiliation || "-",
                 STATUS_LABELS[c.status],
@@ -795,8 +803,9 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
             />
             <DataTable
               title="학생 목록"
-              headers={["이름", "학교", "학년", "담당 코치", "상태"]}
+              headers={["가입일", "이름", "학교", "학년", "담당 코치", "상태"]}
               rows={manageStudentsPaged.items.map((s) => [
+                formatProfileJoinedDate(s.created_at),
                 s.name,
                 s.school_name || "-",
                 s.grade || "-",
@@ -863,8 +872,9 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
         <div className="flex flex-col gap-6">
           <DataTable
             title="코치 목록 · 상태 변경"
-            headers={["이름", "소속", "이메일", "연락처", "상태"]}
+            headers={["가입일", "이름", "소속", "이메일", "연락처", "상태"]}
             rows={coachApprovalPaged.items.map((c) => [
+              formatProfileJoinedDate(c.created_at),
               c.name,
               c.affiliation || "-",
               c.email,
@@ -928,8 +938,9 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
         <div className="grid gap-6 xl:grid-cols-[1.15fr_1fr]">
           <DataTable
             title="배정 가능 코치"
-            headers={["이름", "소속", "연락처"]}
+            headers={["가입일", "이름", "소속", "연락처"]}
             rows={assignmentCoachesPaged.items.map((c) => [
+              formatProfileJoinedDate(c.created_at),
               c.name,
               c.affiliation || "-",
               c.phone,
@@ -996,12 +1007,13 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
                       ? `코치(${assignmentSelectedCoachLabel})별 배정 학생`
                       : "배정 학생"
                 }
-                headers={["이름", "학교", "학년", "담당 코치 변경"]}
+                headers={["가입일", "이름", "학교", "학년", "담당 코치 변경"]}
                 rows={assignmentStudentsPaged.items.map((s) => {
                   const nextCoachId = assignmentCoachByStudentId[s.id] ?? (s.coach_id ?? "");
                   const unchanged = (s.coach_id ?? "") === nextCoachId;
                   const rowUpdating = assignmentStatusUpdatingId === s.id;
                   return [
+                    formatProfileJoinedDate(s.created_at),
                     s.name,
                     s.school_name || "-",
                     s.grade || "-",
