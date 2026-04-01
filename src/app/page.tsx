@@ -25,5 +25,14 @@ export default async function Home() {
     typeof profile.role === "string" ? profile.role.trim() : String(profile.role);
   const memberAreaHref = roleRoutes[role] || "/login";
 
-  return <WorkbookDashboard memberAreaHref={memberAreaHref} />;
+  return (
+    <WorkbookDashboard
+      memberAreaHref={memberAreaHref}
+      headerUser={{
+        name: profile.name,
+        role: profile.role,
+        email: profile.email,
+      }}
+    />
+  );
 }

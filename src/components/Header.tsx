@@ -4,7 +4,9 @@ import Link from "next/link";
 import { useTheme } from "@/hooks/useTheme";
 import { WORKBOOK_QUOTES } from "@/constants/quotes";
 import { QuoteTicker } from "@/components/QuoteTicker";
+import { HeaderMemberMenu } from "@/components/HeaderMemberMenu";
 import { Moon, Sun, Sparkles, User } from "lucide-react";
+import type { WorkbookHeaderUser } from "@/types/dashboard";
 
 interface HeaderProps {
   onMenuClick?: () => void;
@@ -15,6 +17,8 @@ interface HeaderProps {
   memberAreaHref?: string;
   /** 회원 정보 버튼 라벨 (기본: "회원 정보") */
   memberAreaLabel?: string;
+  /** 있으면 호버 메뉴(이름·로그아웃), 없으면 단순 링크 */
+  headerUser?: WorkbookHeaderUser;
 }
 
 export function Header({
@@ -23,6 +27,7 @@ export function Header({
   isMenuOpen = false,
   memberAreaHref,
   memberAreaLabel = "회원 정보",
+  headerUser,
 }: HeaderProps) {
   const { toggleTheme, isDark, mounted } = useTheme();
 
@@ -64,18 +69,25 @@ export function Header({
       {/* 오른쪽 액션 영역: 회원 정보 → 테마 → (모바일) 매뉴 */}
       <div className="ml-auto flex shrink-0 items-center gap-2">
         {/* 회원 정보 링크 (데스크톱: 아이콘+라벨, 모바일: 아이콘만) */}
-        {memberAreaHref && (
-          <Link
-            href={memberAreaHref}
-            className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-[var(--color-text-muted)] transition-all hover:bg-[var(--glass-bg-hover)] hover:text-[var(--color-text)]"
-            aria-label={memberAreaLabel}
-          >
-            <User className="h-5 w-5" />
-            <span className="hidden text-sm font-medium md:inline">
-              {memberAreaLabel}
-            </span>
-          </Link>
-        )}
+        {memberAreaHref &&
+          (headerUser ? (
+            <HeaderMemberMenu
+              memberAreaHref={memberAreaHref}
+              memberAreaLabel={memberAreaLabel}
+              user={headerUser}
+            />
+          ) : (
+            <Link
+              href={memberAreaHref}
+              className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-[var(--color-text-muted)] transition-all hover:bg-[var(--glass-bg-hover)] hover:text-[var(--color-text)]"
+              aria-label={memberAreaLabel}
+            >
+              <User className="h-5 w-5" />
+              <span className="hidden text-sm font-medium md:inline">
+                {memberAreaLabel}
+              </span>
+            </Link>
+          ))}
 
         {/* 다크모드 토글 (데스크톱에서만 - 모바일은 MobileNav에 있음) */}
         <button

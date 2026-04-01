@@ -5,7 +5,10 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { chapters } from "@/data/chapters";
 import { useTheme } from "@/hooks/useTheme";
-import { X, Moon, Sun, Home, Sparkles, User } from "lucide-react";
+import { logout } from "@/lib/actions/auth";
+import { ROLE_LABELS } from "@/constants/member";
+import type { WorkbookHeaderUser } from "@/types/dashboard";
+import { X, Moon, Sun, Home, Sparkles, User, LogOut } from "lucide-react";
 
 interface MobileNavProps {
   isOpen: boolean;
@@ -14,6 +17,7 @@ interface MobileNavProps {
   onSelect: (id: string) => void;
   memberAreaHref?: string;
   memberAreaLabel?: string;
+  headerUser?: WorkbookHeaderUser;
 }
 
 export function MobileNav({
@@ -23,6 +27,7 @@ export function MobileNav({
   onSelect,
   memberAreaHref,
   memberAreaLabel = "회원 정보",
+  headerUser,
 }: MobileNavProps) {
   const { toggleTheme, isDark, mounted } = useTheme();
 
@@ -165,19 +170,48 @@ export function MobileNav({
           </div>
         </nav>
 
-        {/* 하단 - 회원 정보 + 다크모드 토글 */}
+        {/* 하단 - 프로필 요약 · 회원 정보 · 로그아웃 · 테마 */}
         <div className="shrink-0 space-y-2 border-t border-[var(--glass-border)] p-4">
+          {headerUser && (
+            <div className="rounded-xl border border-[var(--glass-border)] bg-[var(--glass-bg)] px-3 py-3">
+              <p className="truncate font-sidebar font-semibold text-[var(--color-text)]">
+                {headerUser.name}
+              </p>
+              <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">
+                {ROLE_LABELS[headerUser.role]}
+              </p>
+              <p
+                className="mt-1 truncate text-xs text-[var(--color-text-subtle)]"
+                title={headerUser.email}
+              >
+                {headerUser.email}
+              </p>
+            </div>
+          )}
           {memberAreaHref && (
             <Link
               href={memberAreaHref}
               onClick={onClose}
-              className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-[var(--color-text-secondary)] transition-all hover:bg-[var(--glass-bg-hover)] hover:text-[var(--color-text)]"
+              className="flex w-full min-h-12 items-center gap-3 rounded-xl px-3 py-3 text-[var(--color-text-secondary)] transition-all hover:bg-[var(--glass-bg-hover)] hover:text-[var(--color-text)] active:bg-[var(--glass-bg-hover)]"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--glass-bg)]">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--glass-bg)]">
                 <User className="h-5 w-5" />
               </div>
               <span className="font-sidebar font-medium">{memberAreaLabel}</span>
             </Link>
+          )}
+          {headerUser && (
+            <form action={logout}>
+              <button
+                type="submit"
+                className="flex w-full min-h-12 items-center gap-3 rounded-xl px-3 py-3 text-left text-[var(--color-text-secondary)] transition-all hover:bg-[var(--glass-bg-hover)] hover:text-[var(--color-text)] active:bg-[var(--glass-bg-hover)]"
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--glass-bg)]">
+                  <LogOut className="h-5 w-5" />
+                </div>
+                <span className="font-sidebar font-medium">로그아웃</span>
+              </button>
+            </form>
           )}
           <button
             type="button"

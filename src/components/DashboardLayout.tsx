@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { DashboardLayoutProps } from "@/types/dashboard";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
@@ -14,6 +14,7 @@ export function DashboardLayout({
   onSelect,
   memberAreaHref,
   memberAreaLabel,
+  headerUser,
 }: DashboardLayoutProps) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const scrollContainerRef = useRef<HTMLElement>(null);
@@ -32,6 +33,7 @@ export function DashboardLayout({
           isMenuOpen={mobileNavOpen}
           memberAreaHref={memberAreaHref}
           memberAreaLabel={memberAreaLabel}
+          headerUser={headerUser}
         />
 
         {/* 메인 콘텐츠 */}
@@ -59,6 +61,7 @@ export function DashboardLayout({
         onSelect={onSelect}
         memberAreaHref={memberAreaHref}
         memberAreaLabel={memberAreaLabel}
+        headerUser={headerUser}
       />
     </div>
   );
