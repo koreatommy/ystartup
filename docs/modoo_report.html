@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>모두의 창업 아이디어 분석 보고서</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<style>
+:root {
+  --primary: #3B5BDB; --secondary: #7048E8; --accent: #F03E3E;
+  --success: #2F9E44; --warning: #E67700; --bg: #F8F9FA;
+  --card: #FFFFFF; --text: #212529; --muted: #868E96; --border: #DEE2E6;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Apple SD Gothic Neo','Pretendard',-apple-system,BlinkMacSystemFont,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
+.hero { background:linear-gradient(135deg,#3B5BDB 0%,#7048E8 100%); color:white; padding:60px 40px; text-align:center; }
+.hero h1 { font-size:2.4rem; font-weight:800; margin-bottom:12px; letter-spacing:-0.5px; }
+.hero p { font-size:1.1rem; opacity:0.85; margin-bottom:24px; }
+.hero-meta { display:flex; justify-content:center; gap:40px; flex-wrap:wrap; }
+.hero-stat { background:rgba(255,255,255,0.15); border-radius:12px; padding:16px 28px; }
+.hero-stat .num { font-size:2rem; font-weight:700; }
+.hero-stat .lbl { font-size:0.85rem; opacity:0.8; margin-top:4px; }
+.container { max-width:1200px; margin:0 auto; padding:40px 24px; }
+.section { margin-bottom:52px; }
+.section-title { font-size:1.4rem; font-weight:700; color:var(--primary); border-left:4px solid var(--primary); padding-left:14px; margin-bottom:24px; }
+.section-sub { font-size:0.95rem; color:var(--muted); margin-top:-16px; margin-bottom:20px; margin-left:18px; }
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.grid-4opp { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+@media(max-width:768px) { .grid-2,.grid-3,.grid-4opp { grid-template-columns:1fr; } }
+.card { background:var(--card); border-radius:16px; padding:24px; box-shadow:0 2px 12px rgba(0,0,0,0.07); }
+.card h3 { font-size:1rem; color:var(--muted); margin-bottom:8px; font-weight:500; }
+.card .big { font-size:2.2rem; font-weight:800; color:var(--text); }
+.card .sub { font-size:0.85rem; color:var(--muted); margin-top:4px; }
+.chart-wrap { background:var(--card); border-radius:16px; padding:28px; box-shadow:0 2px 12px rgba(0,0,0,0.07); }
+.chart-title { font-size:1rem; font-weight:600; color:var(--text); margin-bottom:20px; }
+table { width:100%; border-collapse:collapse; }
+th { background:#EDF2FF; color:var(--primary); font-size:0.85rem; padding:10px 14px; text-align:left; border-bottom:2px solid var(--primary); }
+td { padding:10px 14px; font-size:0.9rem; border-bottom:1px solid var(--border); vertical-align:top; }
+tr:hover td { background:#F8F9FA; }
+.badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:0.78rem; font-weight:600; }
+.badge-blue { background:#DBE4FF; color:#3B5BDB; }
+.badge-green { background:#D3F9D8; color:#2F9E44; }
+.badge-orange { background:#FFE8CC; color:#E67700; }
+.badge-red { background:#FFE3E3; color:#F03E3E; }
+.badge-purple { background:#EDE9FE; color:#7048E8; }
+.insight-box { border-radius:16px; padding:24px; margin-bottom:16px; border-left:5px solid; }
+.insight-blue { background:#EDF2FF; border-color:var(--primary); }
+.insight-green { background:#EBFBEE; border-color:var(--success); }
+.insight-orange { background:#FFF4E6; border-color:var(--warning); }
+.insight-red { background:#FFF5F5; border-color:var(--accent); }
+.insight-purple { background:#F3F0FF; border-color:var(--secondary); }
+.insight-box h4 { font-size:1.05rem; font-weight:700; margin-bottom:8px; }
+.insight-box p { font-size:0.9rem; line-height:1.7; }
+.opp-card { background:var(--card); border-radius:16px; padding:24px; box-shadow:0 2px 12px rgba(0,0,0,0.07); border-top:4px solid; position:relative; }
+.opp-card .rank { position:absolute; top:20px; right:20px; font-size:1.8rem; font-weight:900; opacity:0.1; }
+.opp-card h4 { font-size:1.1rem; font-weight:700; margin-bottom:8px; }
+.opp-card .why { font-size:0.88rem; color:var(--muted); margin-top:10px; line-height:1.6; }
+.opp-card .meta { display:flex; gap:12px; flex-wrap:wrap; margin-top:12px; }
+.opp-card .meta span { font-size:0.82rem; padding:4px 10px; border-radius:20px; }
+.keyword-cloud { display:flex; flex-wrap:wrap; gap:10px; padding:8px 0; }
+.kw-item { padding:6px 14px; border-radius:20px; font-size:0.85rem; font-weight:600; background:linear-gradient(135deg,#DBE4FF,#E0C3FC); color:#3B5BDB; }
+.kw-large { font-size:1.15rem; padding:8px 18px; background:linear-gradient(135deg,#3B5BDB,#7048E8); color:white; }
+.kw-medium { font-size:1rem; padding:7px 16px; }
+.kw-small { font-size:0.82rem; padding:5px 12px; opacity:0.75; }
+footer { background:#212529; color:#ADB5BD; text-align:center; padding:32px; font-size:0.85rem; margin-top:40px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>&#x1F680; 모두의 창업 아이디어 분석 보고서</h1>
+  <p>modoo.or.kr 전체 공개 아이디어 데이터 기반 심층 분석</p>
+  <div class="hero-meta">
+    <div class="hero-stat"><div class="num">2,172건</div><div class="lbl">총 수집 아이디어</div></div>
+    <div class="hero-stat"><div class="num">23개</div><div class="lbl">주제 분류</div></div>
+    <div class="hero-stat"><div class="num">426회</div><div class="lbl">AI 키워드 언급</div></div>
+    <div class="hero-stat"><div class="num">2026.04.01</div><div class="lbl">수집 일자</div></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-title">&#x1F4CA; 핵심 지표</div>
+    <div class="grid-3">
+      <div class="card"><h3>가장 많은 분야</h3><div class="big">플랫폼/마켓</div><div class="sub">578건 · 전체의 26.6%</div></div>
+      <div class="card"><h3>최고 좋아요</h3><div class="big">80개</div><div class="sub">시니어 AI 멘토링 아이디어</div></div>
+      <div class="card"><h3>평균 좋아요</h3><div class="big">2.33개</div><div class="sub">시니어/노인 분야 평균 3.98로 최고</div></div>
+      <div class="card"><h3>최고 관심 키워드</h3><div class="big">AI</div><div class="sub">426건에서 언급 · 전체 19.6%</div></div>
+      <div class="card"><h3>일반/기술 vs 로컬</h3><div class="big">83% : 17%</div><div class="sub">일반/기술 1,801건 / 로컬 371건</div></div>
+      <div class="card"><h3>가장 경쟁 적은 분야</h3><div class="big">물류/배송</div><div class="sub">20건 · 평균 좋아요 1.61</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">&#x1F4C8; 주제별 아이디어 분포</div>
+    <p class="section-sub">전체 2,172건을 23개 주제로 분류 (중복 포함)</p>
+    <div class="chart-wrap">
+      <div class="chart-title">주제별 아이디어 제출 건수</div>
+      <canvas id="topicChart" height="100"></canvas>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">&#x2764;&#xFE0F; 주제별 평균 좋아요 수</div>
+    <p class="section-sub">사람들이 실제로 공감한 분야 — 높을수록 시장성 관심도 높음 (빨강 ≥3.5 / 주황 ≥3.0 / 파랑 ≥2.5)</p>
+    <div class="chart-wrap">
+      <canvas id="likesChart" height="100"></canvas>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">&#x1F3AF; 공급-수요 매트릭스</div>
+    <p class="section-sub">X축: 아이디어 제출 건수(공급), Y축: 평균 좋아요(수요) — 좌상단 = 기회 영역</p>
+    <div class="chart-wrap">
+      <canvas id="matrixChart" height="75"></canvas>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">&#x1F524; 빈출 키워드 TOP 30</div>
+    <div class="chart-wrap">
+      <canvas id="kwChart" height="85"></canvas>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">&#x2601;&#xFE0F; 키워드 클라우드</div>
+    <div class="chart-wrap">
+      <div class="keyword-cloud" id="kwCloud"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">&#x1F967; 분야 구성 비율</div>
+    <div class="grid-2">
+      <div class="chart-wrap">
+        <div class="chart-title">일반/기술 vs 로컬</div>
+        <canvas id="divChart"></canvas>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">주제별 비중 (상위 8개)</div>
+        <canvas id="topicPieChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">&#x1F3C6; 좋아요 TOP 15 아이디어</div>
+    <div class="chart-wrap" style="padding:0;overflow:hidden;">
+      <table>
+        <thead><tr><th>#</th><th>아이디어</th><th>분야</th><th>도전자</th><th>좋아요</th></tr></thead>
+        <tbody><tr>
+      <td style="font-weight:700;color:#3B5BDB">1</td>
+      <td>(은퇴)시니어의 노하우를 'AI 멘토'로 구현하여 청년과 연결하고, 수익(제2의 연금)을 창출하는 세대 융합 솔루션</td>
+      <td><span class="badge badge-blue">일반/기술</span></td>
+      <td>열정진</td>
+      <td style="font-weight:700;color:#F03E3E">♥ 80</td>
+    </tr>
+<tr>
+      <td style="font-weight:700;color:#3B5BDB">2</td>
+      <td>시니어가 마케팅을 배워 우리 동네 가게를 돕고 수익도 만드는 로컬 상생 창업 모델 기버스 게인 시니어</td>
+      <td><span class="badge badge-green">로컬</span></td>
+      <td>요술공주밍키</td>
+      <td style="font-weight:700;color:#F03E3E">♥ 58</td>
+    </tr>
+<tr>
+      <td style="font-weight:700;color:#3B5BDB">3</td>
+      <td>AI로 10분 단위의 삶의 맥락을 계획하고 기록하는 Life Engineering Platform "gollog" (Grid based Ordinary Lif...</td>
+      <td><span class="badge badge-blue">일반/기술</span></td>
+      <td>골록</td>
+      <td style="font-weight:700;color:#F03E3E">♥ 56</td>
+    </tr>
+<tr>
+      <td style="font-weight:700;color:#3B5BDB">4</td>
+      <td>“단독 임무가 도착했습니다.” 방향을 찾고 있는 당신을 위한, 여행을 경력으로 바꾸는 세계여행 프로젝트 <VECTOR></td>
+      <td><span class="badge badge-blue">일반/기술</span></td>
+      <td>bea</td>
+      <td style="font-weight:700;color:#F03E3E">♥ 45</td>
+    </tr>
+<tr>
+      <td style="font-weight:700;color:#3B5BDB">5</td>
+      <td>영상 기반 AI 분석으로 배우·가수·모델 등 숨은 인재를 찾아 연결하는 캐스팅 플랫폼</td>
+      <td><span class="badge badge-blue">일반/기술</span></td>
+      <td>이정준</td>
+      <td style="font-weight:700;color:#F03E3E">♥ 44</td>
+    </tr>
+<tr>
+      <td style="font-weight:700;color:#3B5BDB">6</td>
+      <td>시니어들을 위한 라이프 교육 사업. 키오스크 사용법부터 테무 주문하기 등. 자녀 대리인 사업. 나아가 공항 스마트패스까지 요즘 삶을 살아갈 수 있게 교육! 우...</td>
+      <td><span class="badge badge-green">로컬</span></td>
+      <td>입맛청와대</td>
+      <td style="font-weight:700;color:#F03E3E">♥ 42</td>
+    </tr>
+<tr>
+      <td style="font-weight:700;color:#3B5BDB">7</td>
+      <td>AI 기반 게임뉴스 자동 발행 + 스트리머 콜라보 중개 플랫폼 'GAMEBOY.KR'</td>
+      <td><span class="badge badge-blue">일반/기술</span></td>
+      <td>수다</td>
+      <td style="font-weight:700;color:#F03E3E">♥ 42</td>
+    </tr>
+<tr>
+      <td style="font-weight:700;color:#3B5BDB">8</td>
+      <td>PICO ZERO (자동차 정비사를 위한 통신 및 방전 AI 진단 솔루션 앱)CAN통신 및 방전 진단특화 피코제로</td>
+      <td><span class="badge badge-blue">일반/기술</span></td>
+      <td>김동영</td>
+      <td style="font-weight:700;color:#F03E3E">♥ 40</td>
+    </tr>
+<tr>
+      <td style="font-weight:700;color:#3B5BDB">9</td>
+      <td>고령 근로자도 쉽게 사용하는 직관적 앱으로, 종이 서류와 수기 관리를 줄이는 경비용역 통합 운영 솔루션</td>
+      <td><span class="badge badge-blue">일반/기술</span></td>
+      <td>부니부</td>
+      <td style="font-weight:700;color:#F03E3E">♥ 38</td>
+    </tr>
+<tr>
+      <td style="font-weight:700;color:#3B5BDB">10</td>
+      <td>우리 동네 스포츠 플랫폼</td>
+      <td><span class="badge badge-blue">일반/기술</span></td>
+      <td>모두의운동</td>
+      <td style="font-weight:700;color:#F03E3E">♥ 35</td>
+    </tr>
+<tr>
+      <td style="font-weight:700;color:#3B5BDB">11</td>
+      <td>제작을 모르는 사람도 제품을 만들 수 있는 대화형 AI 서비스 (  PCB 회로기판 부터 )</td>
+      <td><span class="badge badge-blue">일반/기술</span></td>
+      <td>슈퍼메이커_고나_이인규</td>
+      <td style="font-weight:700;color:#F03E3E">♥ 35</td>
+    </tr>
+<tr>
+      <td style="font-weight:700;color:#3B5BDB">12</td>
+      <td>주변에서 열리는 축제와 플리마켓을 한번에 볼 수 있고 쉽게 참여할 수 있는 어플리케이션</td>
+      <td><span class="badge badge-green">로컬</span></td>
+      <td>나샤</td>
+      <td style="font-weight:700;color:#F03E3E">♥ 30</td>
+    </tr>
+<tr>
+      <td style="font-weight:700;color:#3B5BDB">13</td>
+      <td>폭우에도 안전한 우리동네, 스마트 맨홀 시스템</td>
+      <td><span class="badge badge-blue">일반/기술</span></td>
+      <td>미니니니</td>
+      <td style="font-weight:700;color:#F03E3E">♥ 29</td>
+    </tr>
+<tr>
+      <td style="font-weight:700;color:#3B5BDB">14</td>
+      <td>카메라 없이 Wi-Fi 전파만으로 독거노인의 낙상과 생체신호를 24시간 무자각 모니터링하는 '사생활 보호 AI 돌봄 레이더</td>
+      <td><span class="badge badge-blue">일반/기술</span></td>
+      <td>정호영</td>
+      <td style="font-weight:700;color:#F03E3E">♥ 29</td>
+    </tr>
+<tr>
+      <td style="font-weight:700;color:#3B5BDB">15</td>
+      <td>부모님 맞춤 운동과 치매예방 학습, 반려동물 사료 자동주문, 위급상황 24시간 SOS까지! 타지에 사는 자녀의 걱정을 완전히 덜어줄 단 하나의 안심 AI 효자...</td>
+      <td><span class="badge badge-blue">일반/기술</span></td>
+      <td>피치사이다</td>
+      <td style="font-weight:700;color:#F03E3E">♥ 28</td>
+    </tr>
+</tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">&#x1F4A1; 핵심 인사이트</div>
+    <div class="insight-box insight-blue">
+      <h4>&#x1F916; AI 과포화 현상</h4>
+      <p>전체 아이디어의 <strong>26.1%(567건)</strong>이 AI/머신러닝을 언급. 'AI'라는 단어 자체가 426회 등장. 단순히 "AI 기반"이라는 수식어만 붙이는 아이디어가 많아 차별성이 희석됨. <strong>AI 없이 해결하는 접근법</strong>이 오히려 창의적으로 보일 수 있음.</p>
+    </div>
+    <div class="insight-box insight-green">
+      <h4>&#x1F474; 시니어 시장의 높은 공감도</h4>
+      <p>시니어/노인 분야는 107건으로 전체의 4.9%이지만, <strong>평균 좋아요 3.98로 전체 1위</strong>. 좋아요 TOP 3 중 2개가 시니어 관련. 고령화 사회에서 시장 규모가 크고 실제 공감도도 높아 가장 잠재력 있는 분야.</p>
+    </div>
+    <div class="insight-box insight-orange">
+      <h4>&#x1F3DF;&#xFE0F; 스포츠/레저의 낮은 경쟁</h4>
+      <p>스포츠/레저 분야는 단 <strong>28건</strong>으로 전체의 1.3%에 불과하지만, 평균 좋아요 <strong>3.54로 2위</strong>. 국내 생활체육 동호인 1,400만 명 규모에 비해 디지털화 제안이 매우 적어 블루오션.</p>
+    </div>
+    <div class="insight-box insight-purple">
+      <h4>&#x1F4E6; 물류/배송·HR/채용 — 전문가 영역의 공백</h4>
+      <p>물류/배송(20건)과 HR/채용(25건)은 시장 규모 대비 제안 수가 극히 적음. B2B 성격이 강해 일반인이 접근하기 어렵지만, 그만큼 <strong>전문 지식 보유자에게는 독보적 기회</strong>가 됨.</p>
+    </div>
+    <div class="insight-box insight-red">
+      <h4>&#x1F310; 글로벌 진출 아이디어 증가</h4>
+      <p>'글로벌' 41회, '한국' 27회, '외국인' 24회 등장. K-콘텐츠, K-푸드 등 한국 문화를 활용한 해외진출 아이디어가 증가 추세. 내수 시장만이 아닌 글로벌 시장을 초기부터 타겟하는 접근이 유효.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">&#x1F31F; 남들이 제안하지 않은 블루오션 분야</div>
+    <p class="section-sub">제출 건수 대비 공감도가 높거나, 데이터에서 완전히 빠진 미발굴 영역 8선</p>
+    <div class="grid-4opp">
+
+      <div class="opp-card" style="border-color:#3B5BDB;">
+        <div class="rank">01</div>
+        <h4>&#x1F3DF;&#xFE0F; 스포츠 테크 / 아마추어 스포츠</h4>
+        <p style="font-size:0.9rem">동호인 스포츠 리그·매칭·기록 관리, 스포츠 상해 예방, 생활체육 코칭 디지털화. 국내 등록 생활체육 동호인 1,400만 명 대비 IT 도구 극히 부족.</p>
+        <div class="why">&#x1F4CA; 제출 28건(1.3%) vs 평균 ♥3.54 — 수요 대비 공급 최저 불균형</div>
+        <div class="meta">
+          <span class="badge badge-blue">제출 28건</span>
+          <span class="badge badge-red">평균♥ 3.54</span>
+          <span class="badge badge-orange">블루오션</span>
+        </div>
+      </div>
+
+      <div class="opp-card" style="border-color:#7048E8;">
+        <div class="rank">02</div>
+        <h4>&#x1F69A; 물류 혁신 / 라스트마일 특화</h4>
+        <p style="font-size:0.9rem">농촌·도서산간 라스트마일 문제, 냉동·의약품 특수 물류, 소규모 역물류(반품) 솔루션. 쿠팡·마켓컬리 이외 틈새 물류 시장은 여전히 공백.</p>
+        <div class="why">&#x1F4CA; 제출 20건(0.9%) — 전체 최하위, 전문가 진입 장벽이 곧 기회</div>
+        <div class="meta">
+          <span class="badge badge-purple">제출 20건</span>
+          <span class="badge badge-orange">최소 경쟁</span>
+        </div>
+      </div>
+
+      <div class="opp-card" style="border-color:#2F9E44;">
+        <div class="rank">03</div>
+        <h4>&#x1F477; HR테크 / 현장직·외국인 근로자</h4>
+        <p style="font-size:0.9rem">건설·제조·농업 현장 외국인 근로자 HR관리, 비정형 근무자 급여·계약 자동화. '외국인' 키워드 24회이지만 HR 제안은 25건뿐.</p>
+        <div class="why">&#x1F4CA; HR/채용 평균♥ 2.96 + B2B SaaS 모델로 높은 수익성</div>
+        <div class="meta">
+          <span class="badge badge-green">제출 25건</span>
+          <span class="badge badge-blue">B2B SaaS</span>
+        </div>
+      </div>
+
+      <div class="opp-card" style="border-color:#F03E3E;">
+        <div class="rank">04</div>
+        <h4>&#x1F33E; 스마트 농업 / 귀농 플랫폼</h4>
+        <p style="font-size:0.9rem">귀농·귀촌 정보 매칭, 농산물 재배 데이터화, 소농 공동판매 플랫폼. 로컬 분야(371건) 내에서도 농업 특화 제안은 38건 수준에 불과.</p>
+        <div class="why">&#x1F4CA; 고령화 농업 인구 + 청년 귀농 증가 = 구조적 수요 확실</div>
+        <div class="meta">
+          <span class="badge badge-red">제출 38건</span>
+          <span class="badge badge-green">정책 지원↑</span>
+        </div>
+      </div>
+
+      <div class="opp-card" style="border-color:#E67700;">
+        <div class="rank">05</div>
+        <h4>&#x267F; 장애인·접근성 보조 기술</h4>
+        <p style="font-size:0.9rem">복지/사회문제 43건 중 장애인 특화는 극소수. AI 수어 번역, 시각장애인 내비게이션, 청각장애 커뮤니케이션 보조 등. 전 세계적으로 빠르게 성장 중인 분야.</p>
+        <div class="why">&#x1F4CA; 복지 분야 43건뿐 + ESG 투자 트렌드 + 정부 의무 구매 수요</div>
+        <div class="meta">
+          <span class="badge badge-orange">사회적 가치</span>
+          <span class="badge badge-blue">ESG 투자↑</span>
+        </div>
+      </div>
+
+      <div class="opp-card" style="border-color:#0CA678;">
+        <div class="rank">06</div>
+        <h4>&#x1F30A; 기후변화 / 탄소 크레딧 플랫폼</h4>
+        <p style="font-size:0.9rem">환경/에너지 105건 중 대부분이 재활용·태양광 수준. 탄소배출권 거래, 기업 ESG 보고 자동화, 해양쓰레기 수거 비즈니스 모델은 거의 없음.</p>
+        <div class="why">&#x1F4CA; 2026년 K-ETS 3기 시작 — 제도 변화가 직접적 시장 창출</div>
+        <div class="meta">
+          <span class="badge badge-green">탄소중립 정책</span>
+          <span class="badge badge-blue">B2B 기업 수요</span>
+        </div>
+      </div>
+
+      <div class="opp-card" style="border-color:#AE3EC9;">
+        <div class="rank">07</div>
+        <h4>&#x1F3D7;&#xFE0F; 건설/건축 디지털화</h4>
+        <p style="font-size:0.9rem">BIM 기반 소규모 건축 설계 보조, 하자 진단 AI, 건설 현장 안전관리 SaaS. 수십조 규모 시장이지만 전체 2,172건 중 건설·건축 특화 아이디어는 사실상 0건.</p>
+        <div class="why">&#x1F4CA; 데이터에서 완전히 빠진 미발굴 영역 — 선점 효과 극대화 가능</div>
+        <div class="meta">
+          <span class="badge badge-purple">시장 미발굴</span>
+          <span class="badge badge-orange">시장 규모↑</span>
+        </div>
+      </div>
+
+      <div class="opp-card" style="border-color:#1098AD;">
+        <div class="rank">08</div>
+        <h4>&#x2708;&#xFE0F; 외국인 정착 / 다문화 서비스</h4>
+        <p style="font-size:0.9rem">'외국인' 키워드 24회이지만 대부분이 내국인 해외진출 관련. 국내 외국인 250만 명 대상 금융·행정·언어장벽 해소 서비스는 사실상 공백.</p>
+        <div class="why">&#x1F4CA; 다문화 가구 40만 + 외국인 유학생 20만 — 빠르게 성장하는 내수 시장</div>
+        <div class="meta">
+          <span class="badge badge-blue">미발굴 시장</span>
+          <span class="badge badge-green">성장세↑</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">&#x1F4CB; 분야별 상세 통계</div>
+    <div class="chart-wrap" style="padding:0;overflow:hidden;">
+      <table>
+        <thead><tr><th>분야</th><th>제출 건수</th><th>비중</th><th>평균 좋아요</th><th>총 좋아요</th><th>대표 아이디어</th></tr></thead>
+        <tbody><tr>
+      <td><strong>플랫폼/마켓</strong></td>
+      <td>578건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:100%;height:100%;"></div></div></td>
+      <td><span style="color:#E67700;font-weight:700;">♥ 2.62</span></td>
+      <td>1514개</td>
+      <td style="font-size:0.83rem;color:#495057">(은퇴)시니어의 노하우를 'AI 멘토'로 구현하여 청년과 연결하고, 수익(제2의 연금)을 창출하는 ...</td>
+    </tr>
+<tr>
+      <td><strong>AI/머신러닝</strong></td>
+      <td>567건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:98%;height:100%;"></div></div></td>
+      <td><span style="color:#E67700;font-weight:700;">♥ 2.71</span></td>
+      <td>1535개</td>
+      <td style="font-size:0.83rem;color:#495057">(은퇴)시니어의 노하우를 'AI 멘토'로 구현하여 청년과 연결하고, 수익(제2의 연금)을 창출하는 ...</td>
+    </tr>
+<tr>
+      <td><strong>기타</strong></td>
+      <td>559건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:97%;height:100%;"></div></div></td>
+      <td><span style="color:#868E96;font-weight:700;">♥ 1.89</span></td>
+      <td>1055개</td>
+      <td style="font-size:0.83rem;color:#495057">3D프린팅 불량품! 다 마신 페트병! 다시 필라멘트로!! 데스크 위에서 펼쳐지는 100% Close...</td>
+    </tr>
+<tr>
+      <td><strong>헬스케어/의료</strong></td>
+      <td>345건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:60%;height:100%;"></div></div></td>
+      <td><span style="color:#868E96;font-weight:700;">♥ 2.26</span></td>
+      <td>778개</td>
+      <td style="font-size:0.83rem;color:#495057">PICO ZERO (자동차 정비사를 위한 통신 및 방전 AI 진단 솔루션 앱)CAN통신 및 방전 진...</td>
+    </tr>
+<tr>
+      <td><strong>부동산/인테리어</strong></td>
+      <td>163건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:28%;height:100%;"></div></div></td>
+      <td><span style="color:#868E96;font-weight:700;">♥ 1.82</span></td>
+      <td>297개</td>
+      <td style="font-size:0.83rem;color:#495057">예비·신혼부부를 위한 결혼·주거 통합 지원 AI Agent 기반 라이프스타트 플랫폼(NIDO)</td>
+    </tr>
+<tr>
+      <td><strong>교육/학습</strong></td>
+      <td>129건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:22%;height:100%;"></div></div></td>
+      <td><span style="color:#F03E3E;font-weight:700;">♥ 3.35</span></td>
+      <td>432개</td>
+      <td style="font-size:0.83rem;color:#495057">(은퇴)시니어의 노하우를 'AI 멘토'로 구현하여 청년과 연결하고, 수익(제2의 연금)을 창출하는 ...</td>
+    </tr>
+<tr>
+      <td><strong>음식/식품</strong></td>
+      <td>127건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:22%;height:100%;"></div></div></td>
+      <td><span style="color:#868E96;font-weight:700;">♥ 2.02</span></td>
+      <td>257개</td>
+      <td style="font-size:0.83rem;color:#495057">밥, 빵 먹고 속 편해지는 순창의 마법: '0g대 초저당 소화 치트키'</td>
+    </tr>
+<tr>
+      <td><strong>엔터테인먼트</strong></td>
+      <td>116건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:20%;height:100%;"></div></div></td>
+      <td><span style="color:#868E96;font-weight:700;">♥ 2.46</span></td>
+      <td>285개</td>
+      <td style="font-size:0.83rem;color:#495057">영상 기반 AI 분석으로 배우·가수·모델 등 숨은 인재를 찾아 연결하는 캐스팅 플랫폼</td>
+    </tr>
+<tr>
+      <td><strong>보안/안전</strong></td>
+      <td>112건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:19%;height:100%;"></div></div></td>
+      <td><span style="color:#E67700;font-weight:700;">♥ 2.53</span></td>
+      <td>283개</td>
+      <td style="font-size:0.83rem;color:#495057">폭우에도 안전한 우리동네, 스마트 맨홀 시스템</td>
+    </tr>
+<tr>
+      <td><strong>시니어/노인</strong></td>
+      <td>107건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:19%;height:100%;"></div></div></td>
+      <td><span style="color:#F03E3E;font-weight:700;">♥ 3.98</span></td>
+      <td>426개</td>
+      <td style="font-size:0.83rem;color:#495057">(은퇴)시니어의 노하우를 'AI 멘토'로 구현하여 청년과 연결하고, 수익(제2의 연금)을 창출하는 ...</td>
+    </tr>
+<tr>
+      <td><strong>환경/에너지</strong></td>
+      <td>105건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:18%;height:100%;"></div></div></td>
+      <td><span style="color:#868E96;font-weight:700;">♥ 1.76</span></td>
+      <td>185개</td>
+      <td style="font-size:0.83rem;color:#495057">오프라인 강의를 AI가 4채널로 분석해 교수자에게 코칭 리포트를, 학생에게 맞춤 복습 환경을 제공하...</td>
+    </tr>
+<tr>
+      <td><strong>제조/하드웨어</strong></td>
+      <td>102건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:18%;height:100%;"></div></div></td>
+      <td><span style="color:#868E96;font-weight:700;">♥ 2.1</span></td>
+      <td>214개</td>
+      <td style="font-size:0.83rem;color:#495057">강화 인지 학습 최적화 네트워크: 뇌과학 이론 기반 학습 방법론 최적화 기기 및 플랫폼</td>
+    </tr>
+<tr>
+      <td><strong>1인가구</strong></td>
+      <td>59건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:10%;height:100%;"></div></div></td>
+      <td><span style="color:#868E96;font-weight:700;">♥ 2.14</span></td>
+      <td>126개</td>
+      <td style="font-size:0.83rem;color:#495057">🐶매일 출퇴근하며 혼자 있는 반려견을 동네 이웃과 실시간 기록으로 공동 육아하는 앱🐶</td>
+    </tr>
+<tr>
+      <td><strong>패션/뷰티</strong></td>
+      <td>56건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:10%;height:100%;"></div></div></td>
+      <td><span style="color:#868E96;font-weight:700;">♥ 2.46</span></td>
+      <td>138개</td>
+      <td style="font-size:0.83rem;color:#495057">차세대 바이오 기술과 지역 특화 원료를 결합한 4060 맞춤형 하이엔드 스킨케어</td>
+    </tr>
+<tr>
+      <td><strong>반려동물</strong></td>
+      <td>55건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:10%;height:100%;"></div></div></td>
+      <td><span style="color:#E67700;font-weight:700;">♥ 2.73</span></td>
+      <td>150개</td>
+      <td style="font-size:0.83rem;color:#495057">부모님 맞춤 운동과 치매예방 학습, 반려동물 사료 자동주문, 위급상황 24시간 SOS까지! 타지에 ...</td>
+    </tr>
+<tr>
+      <td><strong>금융/핀테크</strong></td>
+      <td>55건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:10%;height:100%;"></div></div></td>
+      <td><span style="color:#868E96;font-weight:700;">♥ 2.02</span></td>
+      <td>111개</td>
+      <td style="font-size:0.83rem;color:#495057"> "착한 일을 하면 코인으로 보상받고, 커뮤니티가 함께 검증하는 선행 보상 플랫폼"</td>
+    </tr>
+<tr>
+      <td><strong>여행/관광</strong></td>
+      <td>54건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:9%;height:100%;"></div></div></td>
+      <td><span style="color:#F03E3E;font-weight:700;">♥ 3.09</span></td>
+      <td>167개</td>
+      <td style="font-size:0.83rem;color:#495057">“단독 임무가 도착했습니다.” 방향을 찾고 있는 당신을 위한, 여행을 경력으로 바꾸는 세계여행 프로...</td>
+    </tr>
+<tr>
+      <td><strong>복지/사회문제</strong></td>
+      <td>43건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:7%;height:100%;"></div></div></td>
+      <td><span style="color:#868E96;font-weight:700;">♥ 1.77</span></td>
+      <td>76개</td>
+      <td style="font-size:0.83rem;color:#495057">디지털 소외계층 및 농촌 지역을 위한 AI 아바타 기반 대화형 행정 키오스크</td>
+    </tr>
+<tr>
+      <td><strong>법률/행정</strong></td>
+      <td>40건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:7%;height:100%;"></div></div></td>
+      <td><span style="color:#868E96;font-weight:700;">♥ 2.33</span></td>
+      <td>93개</td>
+      <td style="font-size:0.83rem;color:#495057">디지털 소외계층 및 농촌 지역을 위한 AI 아바타 기반 대화형 행정 키오스크</td>
+    </tr>
+<tr>
+      <td><strong>농업/농촌</strong></td>
+      <td>38건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:7%;height:100%;"></div></div></td>
+      <td><span style="color:#868E96;font-weight:700;">♥ 1.63</span></td>
+      <td>62개</td>
+      <td style="font-size:0.83rem;color:#495057">디지털 소외계층 및 농촌 지역을 위한 AI 아바타 기반 대화형 행정 키오스크</td>
+    </tr>
+<tr>
+      <td><strong>소상공인/자영업</strong></td>
+      <td>37건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:6%;height:100%;"></div></div></td>
+      <td><span style="color:#E67700;font-weight:700;">♥ 2.59</span></td>
+      <td>96개</td>
+      <td style="font-size:0.83rem;color:#495057">가족의 고충에서 시작된 사업, 소상공인을 위한 마케팅 자동화 툴</td>
+    </tr>
+<tr>
+      <td><strong>스포츠/레저</strong></td>
+      <td>28건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:5%;height:100%;"></div></div></td>
+      <td><span style="color:#F03E3E;font-weight:700;">♥ 3.54</span></td>
+      <td>99개</td>
+      <td style="font-size:0.83rem;color:#495057">우리 동네 스포츠 플랫폼</td>
+    </tr>
+<tr>
+      <td><strong>HR/채용</strong></td>
+      <td>25건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:4%;height:100%;"></div></div></td>
+      <td><span style="color:#E67700;font-weight:700;">♥ 2.96</span></td>
+      <td>74개</td>
+      <td style="font-size:0.83rem;color:#495057">고령 근로자도 쉽게 사용하는 직관적 앱으로, 종이 서류와 수기 관리를 줄이는 경비용역 통합 운영 솔...</td>
+    </tr>
+<tr>
+      <td><strong>물류/배송</strong></td>
+      <td>20건</td>
+      <td><div style="background:#eee;border-radius:4px;overflow:hidden;width:80px;height:8px;"><div style="background:#3B5BDB;width:3%;height:100%;"></div></div></td>
+      <td><span style="color:#868E96;font-weight:700;">♥ 1.85</span></td>
+      <td>37개</td>
+      <td style="font-size:0.83rem;color:#495057">맞춤 반찬을 정기 배송하는 '스마트 도시락 플랫폼'</td>
+    </tr>
+</tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>&#x1F4CA; 모두의 창업 (modoo.or.kr) 공개 아이디어 데이터 분석 · 수집일: 2026-04-01 · 총 2,172건</p>
+  <p style="margin-top:6px;opacity:0.6">본 보고서는 공개된 아이디어 텍스트를 키워드 기반으로 분류·분석한 결과입니다.</p>
+</footer>
+
+<script>
+Chart.register(ChartDataLabels);
+
+const topicLabels = ["플랫폼/마켓", "AI/머신러닝", "기타", "헬스케어/의료", "부동산/인테리어", "교육/학습", "음식/식품", "엔터테인먼트", "보안/안전", "시니어/노인", "환경/에너지", "제조/하드웨어", "1인가구", "패션/뷰티", "반려동물", "금융/핀테크", "여행/관광", "복지/사회문제", "법률/행정", "농업/농촌", "소상공인/자영업", "스포츠/레저", "HR/채용", "물류/배송"];
+const topicValues = [578, 567, 559, 345, 163, 129, 127, 116, 112, 107, 105, 102, 59, 56, 55, 55, 54, 43, 40, 38, 37, 28, 25, 20];
+const topicAvgLikes = [2.62, 2.71, 1.89, 2.26, 1.82, 3.35, 2.02, 2.46, 2.53, 3.98, 1.76, 2.1, 2.14, 2.46, 2.73, 2.02, 3.09, 1.77, 2.33, 1.63, 2.59, 3.54, 2.96, 1.85];
+const kwLabels = ["ai", "맞춤형", "스마트", "활용한", "실시간", "통합", "데이터", "로컬", "디지털", "지역", "자동", "만드는", "ai가", "연결하는", "개인", "가능한", "나만의", "브랜드", "글로벌", "제공하는", "재활", "매칭", "맞춤", "자동화", "제작", "도전", "돕는", "케어", "ai를", "분석"];
+const kwValues = [426, 108, 98, 73, 68, 67, 66, 56, 56, 56, 54, 51, 49, 47, 45, 45, 43, 41, 41, 41, 40, 39, 38, 38, 38, 37, 34, 34, 33, 33];
+const matrixData = [{"x": 578, "y": 2.62, "label": "플랫폼/마켓"}, {"x": 567, "y": 2.71, "label": "AI/머신러닝"}, {"x": 345, "y": 2.26, "label": "헬스케어/의료"}, {"x": 163, "y": 1.82, "label": "부동산/인테리어"}, {"x": 129, "y": 3.35, "label": "교육/학습"}, {"x": 127, "y": 2.02, "label": "음식/식품"}, {"x": 116, "y": 2.46, "label": "엔터테인먼트"}, {"x": 112, "y": 2.53, "label": "보안/안전"}, {"x": 107, "y": 3.98, "label": "시니어/노인"}, {"x": 105, "y": 1.76, "label": "환경/에너지"}, {"x": 102, "y": 2.1, "label": "제조/하드웨어"}, {"x": 59, "y": 2.14, "label": "1인가구"}, {"x": 56, "y": 2.46, "label": "패션/뷰티"}, {"x": 55, "y": 2.73, "label": "반려동물"}, {"x": 55, "y": 2.02, "label": "금융/핀테크"}, {"x": 54, "y": 3.09, "label": "여행/관광"}, {"x": 43, "y": 1.77, "label": "복지/사회문제"}, {"x": 40, "y": 2.33, "label": "법률/행정"}, {"x": 38, "y": 1.63, "label": "농업/농촌"}, {"x": 37, "y": 2.59, "label": "소상공인/자영업"}, {"x": 28, "y": 3.54, "label": "스포츠/레저"}, {"x": 25, "y": 2.96, "label": "HR/채용"}, {"x": 20, "y": 1.85, "label": "물류/배송"}];
+const kwCloudData = [["ai", 426], ["맞춤형", 108], ["스마트", 98], ["활용한", 73], ["실시간", 68], ["통합", 67], ["데이터", 66], ["로컬", 56], ["디지털", 56], ["지역", 56], ["자동", 54], ["만드는", 51], ["ai가", 49], ["연결하는", 47], ["개인", 45], ["가능한", 45], ["나만의", 43], ["브랜드", 41], ["글로벌", 41], ["제공하는", 41], ["재활", 40], ["매칭", 39], ["맞춤", 38], ["자동화", 38], ["제작", 38], ["도전", 37], ["돕는", 34], ["케어", 34], ["ai를", 33], ["분석", 33], ["프리미엄", 33], ["기반의", 32], ["교육", 31], ["기반으로", 30], ["콘텐츠", 30], ["모든", 30], ["직접", 29], ["ai로", 29], ["없이", 28], ["데이터를", 28]];
+
+const palette = ['#3B5BDB','#7048E8','#F03E3E','#2F9E44','#E67700','#0CA678','#1098AD','#AE3EC9','#D6336C','#F76707','#74C0FC','#B197FC','#FF8787','#8CE99A','#FFD43B','#63E6BE','#4DABF7','#DA77F2','#F783AC','#FFA94D','#228BE6','#845EF7','#FA5252','#40C057'];
+
+// 1. 주제별 수평 막대
+new Chart(document.getElementById('topicChart'), {
+  type: 'bar',
+  data: { labels: topicLabels, datasets: [{ label: '건수', data: topicValues, backgroundColor: palette, borderRadius: 6 }] },
+  options: {
+    indexAxis: 'y', responsive: true,
+    plugins: { legend: { display: false }, datalabels: { anchor:'end', align:'end', formatter: v => v+'건', font:{size:11,weight:'600'}, color:'#495057' } },
+    scales: { x: { grid:{color:'#F1F3F5'}, ticks:{color:'#868E96'} }, y: { grid:{display:false}, ticks:{color:'#212529',font:{size:12}} } }
+  }
+});
+
+// 2. 평균 좋아요
+new Chart(document.getElementById('likesChart'), {
+  type: 'bar',
+  data: { labels: topicLabels, datasets: [{ label: '평균 좋아요', data: topicAvgLikes, backgroundColor: topicAvgLikes.map(v => v>=3.5?'#F03E3E':v>=3.0?'#E67700':v>=2.5?'#3B5BDB':'#ADB5BD'), borderRadius: 6 }] },
+  options: {
+    indexAxis: 'y', responsive: true,
+    plugins: { legend: { display: false }, datalabels: { anchor:'end', align:'end', formatter: v => '♥ '+v, font:{size:11,weight:'600'}, color:'#495057' } },
+    scales: { x: { grid:{color:'#F1F3F5'}, ticks:{color:'#868E96'} }, y: { grid:{display:false}, ticks:{color:'#212529',font:{size:12}} } }
+  }
+});
+
+// 3. 매트릭스 산점도
+new Chart(document.getElementById('matrixChart'), {
+  type: 'scatter',
+  data: { datasets: [{ label: '분야', data: matrixData, backgroundColor: matrixData.map((d,i) => palette[i%palette.length]+'CC'), pointRadius: matrixData.map(d => Math.sqrt(d.x)*0.8+5), pointHoverRadius: 10 }] },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => `${ctx.raw.label}: 제출 ${ctx.raw.x}건, 평균♥ ${ctx.raw.y}` } },
+      datalabels: { formatter: v => v.label, font:{size:10,weight:'600'}, color:'#212529', offset:8, align:'top' }
+    },
+    scales: {
+      x: { title:{display:true, text:'제출 건수 (공급) →', color:'#495057', font:{size:12}}, grid:{color:'#F1F3F5'} },
+      y: { title:{display:true, text:'평균 좋아요 (수요) ↑', color:'#495057', font:{size:12}}, grid:{color:'#F1F3F5'} }
+    }
+  }
+});
+
+// 4. 키워드 막대
+new Chart(document.getElementById('kwChart'), {
+  type: 'bar',
+  data: { labels: kwLabels, datasets: [{ label: '언급 횟수', data: kwValues, backgroundColor: kwValues.map((v,i) => i===0?'#F03E3E':i<5?'#E67700':i<15?'#3B5BDB':'#ADB5BD'), borderRadius: 4 }] },
+  options: {
+    responsive: true,
+    plugins: { legend:{display:false}, datalabels:{display:false} },
+    scales: { x:{grid:{display:false}, ticks:{color:'#495057',font:{size:11}}}, y:{grid:{color:'#F1F3F5'}, ticks:{color:'#868E96'}} }
+  }
+});
+
+// 5. 분야 도넛
+new Chart(document.getElementById('divChart'), {
+  type: 'doughnut',
+  data: { labels: ['일반/기술','로컬'], datasets: [{ data:[1801,371], backgroundColor:['#3B5BDB','#2F9E44'], borderWidth:3, borderColor:'#fff' }] },
+  options: { responsive:true, plugins: { legend:{position:'bottom'}, datalabels:{ formatter:(v,ctx)=>{const t=ctx.dataset.data.reduce((a,b)=>a+b,0); return (v/t*100).toFixed(1)+'%';}, color:'#fff', font:{size:14,weight:'700'} } } }
+});
+
+// 6. 주제 파이
+new Chart(document.getElementById('topicPieChart'), {
+  type: 'pie',
+  data: { labels: topicLabels.slice(0,8), datasets: [{ data: topicValues.slice(0,8), backgroundColor: palette.slice(0,8), borderWidth:3, borderColor:'#fff' }] },
+  options: { responsive:true, plugins: { legend:{position:'bottom',labels:{font:{size:11}}}, datalabels:{ formatter:(v,ctx)=>{const t=ctx.dataset.data.reduce((a,b)=>a+b,0); return (v/t*100).toFixed(1)+'%';}, color:'#fff', font:{size:11,weight:'700'} } } }
+});
+
+// 키워드 클라우드
+const maxCount = kwCloudData[0][1];
+const cloudEl = document.getElementById('kwCloud');
+kwCloudData.forEach(([word, count]) => {
+  const span = document.createElement('span');
+  const ratio = count / maxCount;
+  span.className = 'kw-item ' + (ratio > 0.7 ? 'kw-large' : ratio > 0.35 ? 'kw-medium' : 'kw-small');
+  span.textContent = word + ' ' + count;
+  cloudEl.appendChild(span);
+});
+</script>
+</body>
+</html>

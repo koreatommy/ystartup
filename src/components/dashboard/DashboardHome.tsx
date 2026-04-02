@@ -6,7 +6,6 @@ import { QuickStats } from "./QuickStats";
 import { Timeline } from "./Timeline";
 import { LearningGamesIntro } from "./LearningGamesIntro";
 import { Rocket, Sparkles, ArrowRight, ZoomIn, X } from "lucide-react";
-import { chapters } from "@/data/chapters";
 
 const ROADMAP_IMG_SRC = "/roadmap-6steps.png";
 const ROADMAP_IMG_ALT =
@@ -20,7 +19,6 @@ interface DashboardHomeProps {
 
 // 임시 진행 상태 (나중에 실제 데이터로 교체)
 const MOCK_COMPLETED_STEPS: string[] = [];
-const MOCK_IN_PROGRESS_STEPS = 0;
 
 export function DashboardHome({
   selectedId,
@@ -28,10 +26,6 @@ export function DashboardHome({
   className,
 }: DashboardHomeProps) {
   const [roadmapZoomOpen, setRoadmapZoomOpen] = useState(false);
-  const totalSteps = chapters.length;
-  const completedSteps = MOCK_COMPLETED_STEPS.length;
-  const inProgressSteps = MOCK_IN_PROGRESS_STEPS;
-
   return (
     <div className={cn("space-y-8", className)}>
       {/* 환영 헤더 */}
@@ -72,7 +66,7 @@ export function DashboardHome({
         </div>
       </section>
 
-      {/* 6단계 로드맵(좌) + 10단계 창업 여정 타임라인(우). 로드맵 아래 빈공간에 진행상황 2x2 */}
+      {/* 6단계 로드맵(좌) + 10단계 창업 여정 타임라인(우). 로드맵 아래 Hot Issue */}
       <section
         className="grid gap-6 lg:grid-cols-[1fr_minmax(0,340px)] lg:items-start"
         aria-label="로드맵 및 창업 여정"
@@ -123,11 +117,7 @@ export function DashboardHome({
               />
             </div>
           )}
-          <QuickStats
-            totalSteps={totalSteps}
-            completedSteps={completedSteps}
-            inProgressSteps={inProgressSteps}
-          />
+          <QuickStats />
         </div>
         <div className="min-w-0 shrink-0 lg:max-w-[340px]">
           <Timeline
