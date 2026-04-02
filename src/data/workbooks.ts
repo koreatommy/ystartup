@@ -748,7 +748,7 @@ const workbook10: WorkbookContent = {
     "✨ 여러분의 빛나는 창업가 정신을 담아 아래 다짐을 완성해 보세요.\n\n\"우리 팀은 앞으로 ________________________________________________ 하는 창업가가 되겠다!\"",
   summaryClosing:
     "🎉 여러분의 용기 있는 도전을 진심으로 응원합니다!",
-  summaryImage: "/images/info10.png",
+  summaryImage: "/images/info10_.png",
 };
 
 const workbookMap: Record<string, WorkbookContent> = {
