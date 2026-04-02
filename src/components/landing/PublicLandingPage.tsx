@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -177,6 +178,10 @@ export function PublicLandingPage() {
                 청소년이 스스로 질문하고, 해결하고, 발표하는
                 <br />
                 <span className="font-semibold text-gray-900">경험 중심 창업교육 워크북</span>
+                <br />
+                <span className="mt-1 block text-lg font-bold text-gray-900">
+                  영월진로진학지원센터와 함께 합니다.
+                </span>
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button
@@ -205,12 +210,15 @@ export function PublicLandingPage() {
             <div className="landing-animate-fade-in-delay relative">
               <div className="relative mx-auto aspect-square max-w-lg">
                 <div className="absolute inset-0 rotate-6 rounded-3xl bg-gradient-to-br from-mint-200 to-orange-200" />
-                <div className="absolute inset-0 flex -rotate-3 items-center justify-center rounded-3xl bg-gradient-to-br from-mint-100 to-orange-100 shadow-2xl">
-                  <div className="p-8 text-center">
-                    <BookOpen className="mx-auto mb-4 h-24 w-24 text-mint-600" />
-                    <h3 className="mb-2 text-2xl font-bold text-gray-900">Y·Start Up</h3>
-                    <p className="text-gray-600">창업교육과정 워크북</p>
-                  </div>
+                <div className="absolute inset-0 -rotate-3 overflow-hidden rounded-3xl bg-gradient-to-br from-mint-100 to-orange-100 shadow-2xl">
+                  <Image
+                    src="/images/landing/bookcover.png"
+                    alt="Y·Start Up 창업교육과정 워크북 표지"
+                    fill
+                    className="object-cover object-center"
+                    sizes="(max-width: 768px) 100vw, 512px"
+                    priority
+                  />
                 </div>
               </div>
             </div>
