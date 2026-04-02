@@ -22,6 +22,7 @@ import {
   Lightbulb,
   Mail,
   Menu,
+  Phone,
   Presentation,
   Rocket,
   Users,
@@ -78,9 +79,6 @@ export function PublicLandingPage() {
               <Button type="button" variant="ghost" onClick={() => scrollToId("features")}>
                 특징
               </Button>
-              <Button asChild variant="ghost" className="text-gray-700">
-                <Link href="/login">로그인</Link>
-              </Button>
               <div className="flex items-center gap-1.5">
                 <Button
                   asChild
@@ -99,12 +97,8 @@ export function PublicLandingPage() {
                   <Link href="/signup/coach">코치 회원가입</Link>
                 </Button>
               </div>
-              <Button
-                type="button"
-                onClick={openLoginPrompt}
-                className="bg-mint-500 text-white hover:bg-mint-600"
-              >
-                다운로드
+              <Button asChild className="bg-mint-500 text-white hover:bg-mint-600">
+                <Link href="/login">로그인</Link>
               </Button>
             </div>
             <Button
@@ -151,24 +145,16 @@ export function PublicLandingPage() {
               >
                 특징
               </Button>
-              <Button asChild variant="ghost" className="w-full justify-start">
-                <Link href="/login">로그인</Link>
-              </Button>
               <Button asChild variant="outline" className="w-full justify-start border-orange-200 text-orange-700">
                 <Link href="/signup/student">학생 회원가입</Link>
               </Button>
               <Button asChild variant="outline" className="w-full justify-start border-mint-200 text-mint-700">
                 <Link href="/signup/coach">코치 회원가입</Link>
               </Button>
-              <Button
-                type="button"
-                onClick={() => {
-                  openLoginPrompt();
-                  setMobileMenuOpen(false);
-                }}
-                className="w-full bg-mint-500 text-white hover:bg-mint-600"
-              >
-                다운로드
+              <Button asChild className="w-full bg-mint-500 text-white hover:bg-mint-600">
+                <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                  로그인
+                </Link>
               </Button>
             </div>
           </div>
@@ -200,7 +186,7 @@ export function PublicLandingPage() {
                   className="bg-mint-500 text-white shadow-[0_10px_30px_-10px_rgba(20,184,166,0.45)] hover:bg-mint-600"
                 >
                   <Download className="mr-2 h-5 w-5" />
-                  워크북 다운로드
+                  시작하기
                 </Button>
                 <Button
                   type="button"
@@ -588,7 +574,7 @@ export function PublicLandingPage() {
                 className="bg-white text-mint-700 shadow-lg hover:bg-gray-100"
               >
                 <Download className="mr-2 h-5 w-5" />
-                워크북 다운로드
+                시작하기
               </Button>
               <Button
                 type="button"
@@ -672,7 +658,7 @@ export function PublicLandingPage() {
                     onClick={openLoginPrompt}
                     className="transition-colors hover:text-mint-400"
                   >
-                    다운로드
+                    시작하기
                   </button>
                 </li>
               </ul>
@@ -703,7 +689,7 @@ export function PublicLandingPage() {
           className="rounded-full bg-mint-500 px-6 text-white shadow-2xl hover:bg-mint-600"
         >
           <Download className="mr-2 h-5 w-5" />
-          다운로드
+          시작하기
         </Button>
       </div>
 
@@ -712,10 +698,25 @@ export function PublicLandingPage() {
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold">로그인이 필요합니다</DialogTitle>
             <DialogDescription className="text-base pt-2">
-              워크북 다운로드·교육 문의·구독 안내는 로그인 후 이용할 수 있습니다. 계정이 없으시면
+              워크북·교육 문의·구독 안내는 로그인 후 이용할 수 있습니다. 계정이 없으시면
               학생 또는 코치 회원가입으로 시작하세요.
             </DialogDescription>
           </DialogHeader>
+          <div className="flex items-start gap-3 rounded-lg border border-gray-100 bg-gray-50/80 px-4 py-3 text-sm text-gray-700">
+            <Phone
+              className="mt-0.5 h-5 w-5 shrink-0 text-mint-600"
+              aria-hidden
+            />
+            <div className="min-w-0 space-y-0.5">
+              <p>문의 : 한국창업융합연구원 엄수현 원장</p>
+              <a
+                href="tel:01082271730"
+                className="font-medium text-mint-700 underline-offset-2 hover:underline"
+              >
+                010-8227-1730
+              </a>
+            </div>
+          </div>
           <DialogFooter className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:justify-end">
             <Button type="button" variant="outline" onClick={() => setLoginPromptOpen(false)}>
               닫기
