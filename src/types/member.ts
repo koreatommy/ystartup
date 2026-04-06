@@ -8,6 +8,22 @@ export interface PagedResult<T> {
   pageSize: number;
 }
 
+/** 슈퍼관리자 운영 메모 (`admin_memos`) */
+export interface AdminMemo {
+  id: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  created_by: string;
+  author_name: string | null;
+}
+
+/** `listAdminMemosPaged` 파라미터 */
+export interface ListAdminMemosParams {
+  page?: number;
+  pageSize?: number;
+}
+
 /** `listProfilesPaged` 서버 액션 파라미터 */
 export interface ListProfilesPagedParams {
   page?: number;

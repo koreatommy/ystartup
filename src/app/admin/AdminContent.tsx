@@ -8,6 +8,7 @@ import {
   DataTable,
   FormCard,
   AdminMemberProfileEditor,
+  AdminMemosSection,
 } from "@/components/member";
 import { SCHOOLS, STATUS_LABELS, ROLE_LABELS, STATUSES } from "@/constants/member";
 import type { MemberStatus } from "@/constants/member";
@@ -559,6 +560,7 @@ export function AdminContent({ selected, onSelect, profile }: Props) {
               { label: "학교 등록 현황", value: "16개교" },
             ]}
           />
+          <AdminMemosSection />
         </div>
       </>
     ),

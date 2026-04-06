@@ -8,3 +8,4 @@ export { DataTable, type DataTablePaginationProps } from "./DataTable";
 export { FormCard } from "./FormCard";
 export { PasswordChangeSection } from "./PasswordChangeSection";
 export { AdminMemberProfileEditor } from "./AdminMemberProfileEditor";
+export { AdminMemosSection } from "./AdminMemosSection";
