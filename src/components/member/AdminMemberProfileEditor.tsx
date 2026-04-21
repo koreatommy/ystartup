@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { resetCoachStudentPasswordToInitial } from "@/lib/actions/admin-reset-member-password";
 import { cn, formatProfileJoinedDate } from "@/lib/utils";
 import {
   GRADES,
@@ -50,6 +51,7 @@ export function AdminMemberProfileEditor({
   const [schoolName, setSchoolName] = useState("");
   const [grade, setGrade] = useState<Grade | "">("");
   const [coachId, setCoachId] = useState("");
+  const [passwordResetting, setPasswordResetting] = useState(false);
 
   useEffect(() => {
     if (!member) {
@@ -114,6 +116,25 @@ export function AdminMemberProfileEditor({
     }
   }
 
+  async function handlePasswordReset() {
+    if (!member || (!isCoach && !isStudent)) return;
+    if (
+      !window.confirm(
+        `${member.name}님의 로그인 비밀번호를 임시 비밀번호(123456)로 재설정할까요?`,
+      )
+    ) {
+      return;
+    }
+    setPasswordResetting(true);
+    const res = await resetCoachStudentPasswordToInitial(member.id);
+    setPasswordResetting(false);
+    if ("error" in res) {
+      window.alert(res.error);
+      return;
+    }
+    window.alert("비밀번호를 123456으로 초기화했습니다. 회원에게 안내해 주세요.");
+  }
+
   return (
     <form onSubmit={handleSubmit} className="glass rounded-2xl p-5">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -134,6 +155,16 @@ export function AdminMemberProfileEditor({
           >
             {saving ? "저장 중…" : "변경 저장"}
           </button>
+          {(isCoach || isStudent) && (
+            <button
+              type="button"
+              disabled={passwordResetting}
+              onClick={() => void handlePasswordReset()}
+              className="rounded-xl border border-[var(--glass-border)] bg-[var(--glass-bg)] px-4 py-2 text-sm font-medium text-[var(--color-text-secondary)] hover:bg-[var(--glass-bg-hover)] disabled:opacity-50"
+            >
+              {passwordResetting ? "처리 중…" : "비번리셋"}
+            </button>
+          )}
           <button
             type="button"
             disabled={deactivating || !canDeactivate}
@@ -261,7 +292,9 @@ export function AdminMemberProfileEditor({
       </div>
 
       <p className="mt-4 text-xs text-[var(--color-text-subtle)]">
-        비활성(삭제)은 계정을 DB에서 지우지 않고 로그인이 불가능한 상태로 전환합니다.
+        비번리셋은 로그인 비밀번호를 <span className="font-medium text-[var(--color-text-muted)]">123456</span>으로
+        바꿉니다. 서버에 <code className="text-[var(--color-text-secondary)]">SUPABASE_SERVICE_ROLE_KEY</code>가
+        있어야 동작합니다. 비활성(삭제)은 계정을 DB에서 지우지 않고 로그인이 불가능한 상태로 전환합니다.
       </p>
     </form>
   );
