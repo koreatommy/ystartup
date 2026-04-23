@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>창업교육 멘토링 가이드</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #1a1a2e;
+    --accent: #e94560;
+    --accent2: #0f3460;
+    --accent3: #533483;
+    --bg: #f5f5f0;
+    --card: #ffffff;
+    --text: #1a1a2e;
+    --text-muted: #666;
+    --step1: #e94560;
+    --step2: #0f3460;
+    --step3: #533483;
+    --step4: #16817a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: clamp(16px, 0.4vw + 15px, 18px);
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--primary);
+    color: #fff;
+    padding: clamp(48px, 8vw, 88px) clamp(20px, 5vw, 40px) clamp(40px, 6vw, 72px);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: min(1040px, 100%);
+    margin: 0 auto;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.08;
+    top: -80px; right: -80px;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: var(--accent3);
+    opacity: 0.12;
+    bottom: -60px; left: -40px;
+  }
+  .hero-label {
+    display: inline-block;
+    font-size: clamp(22px, 0.45vw + 20px, 24px);
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    padding: 10px 20px;
+    border-radius: 24px;
+    margin-bottom: 22px;
+  }
+  .hero h1 {
+    font-size: clamp(3.2rem, 2rem + 5vw, 4.6rem);
+    font-weight: 900;
+    line-height: 1.22;
+    margin-bottom: 18px;
+    letter-spacing: -0.03em;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero p {
+    font-size: clamp(28px, 0.75vw + 26px, 32px);
+    color: rgba(255,255,255,0.72);
+    font-weight: 400;
+    line-height: 1.5;
+    max-width: 22em;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* NAV */
+  .nav-wrap {
+    background: var(--primary);
+    padding: 0 clamp(16px, 4vw, 28px) 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+  }
+  .nav-inner {
+    max-width: min(1040px, 100%);
+    margin: 0 auto;
+  }
+  .nav-scroll {
+    display: flex;
+    gap: 10px;
+    justify-content: safe center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .nav-scroll::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    white-space: nowrap;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: clamp(13px, 0.25vw + 12px, 14px);
+    font-weight: 500;
+    color: rgba(255,255,255,0.72);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 999px;
+    padding: 10px 16px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    text-decoration: none;
+  }
+  .nav-btn:hover, .nav-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .nav-btn:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+  }
+
+  /* CONTAINER — 본문 가로폭 확대 */
+  .container {
+    max-width: min(1040px, 100%);
+    margin: 0 auto;
+    padding: clamp(28px, 4vw, 40px) clamp(16px, 4vw, 40px) clamp(56px, 8vw, 80px);
+    width: 100%;
+  }
+
+  /* SECTION */
+  .section { margin-bottom: clamp(28px, 4vw, 40px); }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .section-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: clamp(1.05rem, 0.5vw + 1rem, 1.25rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .section-sub {
+    font-size: clamp(13px, 0.2vw + 12px, 14px);
+    color: var(--text-muted);
+    font-weight: 400;
+    line-height: 1.5;
+    margin-top: 2px;
+  }
+
+  /* INTRO CARD */
+  .intro-card {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 18px;
+    padding: clamp(22px, 3vw, 28px);
+    margin-bottom: clamp(28px, 4vw, 36px);
+  }
+  .intro-card p {
+    font-size: clamp(14px, 0.35vw + 13px, 16px);
+    color: rgba(255,255,255,0.82);
+    margin-bottom: 18px;
+    font-weight: 400;
+    line-height: 1.72;
+  }
+  .intro-card strong { color: var(--accent); font-weight: 700; }
+  .steps-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (min-width: 720px) {
+    .steps-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+  }
+  .step-chip {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: clamp(13px, 0.2vw + 12px, 14px);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    line-height: 1.45;
+  }
+  .step-num {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* CLASS ITEM */
+  .class-item {
+    background: var(--card);
+    border-radius: 14px;
+    padding: clamp(16px, 2vw, 20px) clamp(18px, 2.5vw, 22px);
+    margin-bottom: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.04);
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .class-icon {
+    width: 40px; height: 40px;
+    border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .class-content h4 {
+    font-size: clamp(15px, 0.35vw + 14px, 17px);
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: -0.015em;
+  }
+  .class-content p {
+    font-size: clamp(14px, 0.25vw + 13px, 15px);
+    color: var(--text-muted);
+    line-height: 1.65;
+  }
+
+  /* ROLE CARD */
+  .role-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: clamp(20px, 2.5vw, 24px);
+    margin-bottom: 14px;
+    border-left: 4px solid;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.06);
+  }
+  .role-card h3 {
+    font-size: clamp(15px, 0.4vw + 14px, 17px);
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+  .role-card ul { list-style: none; padding: 0; }
+  .role-card ul li {
+    font-size: clamp(14px, 0.3vw + 13px, 16px);
+    color: #3a3a45;
+    padding: 7px 0 7px 22px;
+    position: relative;
+    line-height: 1.65;
+  }
+  .role-card ul li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.3;
+  }
+
+  /* PRINCIPLE LIST */
+  .principle-list {
+    background: var(--card);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+  .principle-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px clamp(18px, 2.5vw, 22px);
+    border-bottom: 1px solid #eee;
+  }
+  .principle-item:last-child { border-bottom: none; }
+  .principle-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+  .principle-item p {
+    font-size: clamp(14px, 0.3vw + 13px, 16px);
+    color: #333;
+    line-height: 1.65;
+  }
+
+  /* CAUTION */
+  .caution-card {
+    background: #fff5f5;
+    border: 1.5px solid #ffd0d0;
+    border-radius: 14px;
+    padding: clamp(18px, 2vw, 22px) clamp(20px, 2.5vw, 24px);
+    margin-bottom: 18px;
+  }
+  .caution-card h3 {
+    font-size: clamp(14px, 0.3vw + 13px, 16px);
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .caution-card ul { list-style: none; padding: 0; }
+  .caution-card ul li {
+    font-size: clamp(14px, 0.25vw + 13px, 15px);
+    color: #4a4a55;
+    padding: 6px 0 6px 22px;
+    position: relative;
+    line-height: 1.65;
+  }
+  .caution-card ul li::before {
+    content: '✕';
+    position: absolute;
+    left: 0;
+    font-size: 10px;
+    color: var(--accent);
+    top: 6px;
+  }
+
+  /* DIVIDER */
+  .divider { border: none; border-top: 1px solid #e8e8e8; margin: 28px 0; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px clamp(16px, 4vw, 32px);
+    font-size: clamp(12px, 0.2vw + 11px, 13px);
+    color: var(--text-muted);
+    border-top: 1px solid #e8e8e8;
+    line-height: 1.6;
+  }
+
+  /* 앵커 이동 시 스티키 내비 높이만큼 오프셋 */
+  #intro,
+  #class,
+  #stages,
+  #outside,
+  #caution {
+    scroll-margin-top: 88px;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">MENTOR GUIDE 2026</div>
+    <h1>창업교육<br><span>멘토링 가이드</span></h1>
+    <p>대학생 멘토를 위한 단계별 역할 안내서</p>
+  </div>
+</div>
+
+<div class="nav-wrap">
+  <div class="nav-inner">
+    <div class="nav-scroll">
+      <a class="nav-btn" href="#intro">교육 목표</a>
+      <a class="nav-btn" href="#class">수업 중 역할</a>
+      <a class="nav-btn" href="#stages">단계별 역할</a>
+      <a class="nav-btn" href="#outside">수업 외 역할</a>
+      <a class="nav-btn" href="#caution">유의사항</a>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div id="intro" class="intro-card">
+    <p>이번 창업교육은 아래 <strong>4단계</strong>를 거쳐 진행됩니다.<br>각 과정에서 멘토는 팀원들과 함께 고민하고 방향을 잡아주는 <strong>파트너이자 조력자</strong>로서<br>학생들의 성장을 돕습니다.</p>
+    <div class="steps-grid">
+      <div class="step-chip">
+        <div class="step-num" style="background:#e94560;color:#fff;">1</div>아이디어 도출
+      </div>
+      <div class="step-chip">
+        <div class="step-num" style="background:#0f3460;color:#fff;">2</div>사업계획서 작성
+      </div>
+      <div class="step-chip">
+        <div class="step-num" style="background:#533483;color:#fff;">3</div>MVP 제품 시연
+      </div>
+      <div class="step-chip">
+        <div class="step-num" style="background:#16817a;color:#fff;">4</div>데모데이 피칭
+      </div>
+    </div>
+  </div>
+
+  <div id="class" class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#fff0f3;">🏫</div>
+      <div>
+        <div class="section-title">수업 중 역할</div>
+        <div class="section-sub">교육 진행자의 강의와 병행하는 팀 활동 지원</div>
+      </div>
+    </div>
+
+    <div class="class-item">
+      <div class="class-icon" style="background:#fff0f3;">🤝</div>
+      <div class="class-content">
+        <h4>팀 활동 진행 보조</h4>
+        <p>진행자 지시 후 팀원들에게 재설명하고 활동을 시작시킵니다.<br>초등·중등 혼합 시 어린 학생에게 눈높이 재설명이 특히 중요합니다.</p>
+      </div>
+    </div>
+
+    <div class="class-item">
+      <div class="class-icon" style="background:#f0f4ff;">⏱</div>
+      <div class="class-content">
+        <h4>시간·진도 관리</h4>
+        <p>팀 활동 시간을 체크하고 &ldquo;3분 남았어요&rdquo; 등 중간 안내를 합니다.<br>진도가 늦는 팀원 옆에서 함께 진행합니다.</p>
+      </div>
+    </div>
+
+    <div class="class-item">
+      <div class="class-icon" style="background:#f3f0ff;">💡</div>
+      <div class="class-content">
+        <h4>아이디어 촉진</h4>
+        <p>학생들이 막힐 때 &ldquo;예를 들면 이런 건 어때?&rdquo; 식으로 질문으로 유도합니다.<br>멘토 본인의 아이디어를 주입하지 않는 것이 원칙입니다.</p>
+      </div>
+    </div>
+
+    <div class="class-item">
+      <div class="class-icon" style="background:#f0faf9;">📝</div>
+      <div class="class-content">
+        <h4>기록·정리 지원</h4>
+        <p>워크시트, 포스트잇, 발표자료 등 산출물 작성 시<br>학생 스스로 작성하되 형식면을 도와줍니다.</p>
+      </div>
+    </div>
+
+    <div class="class-item">
+      <div class="class-icon" style="background:#fffbf0;">🎤</div>
+      <div class="class-content">
+        <h4>발표 리허설 코칭</h4>
+        <p>팀 발표 전 한 번 연습시키고,<br>목소리 크기·순서·핵심 메시지가 빠지지 않았는지 점검합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div id="stages" class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#fff0f3;">🚀</div>
+      <div>
+        <div class="section-title">단계별 멘토 역할</div>
+        <div class="section-sub">교육 4단계 각각에서 수행해야 할 핵심 역할</div>
+      </div>
+    </div>
+
+    <div class="role-card" style="border-color:#e94560;">
+      <h3><span style="color:#e94560;">STEP 1</span> &nbsp;아이디어 도출</h3>
+      <ul>
+        <li>발산적 사고를 자극하는 질문 던지기</li>
+        <li>아이디어 간 연결고리 발견 및<br>새로운 관점 제시</li>
+        <li>평가·비판 없이 자유로운 의견 개진 분위기 조성</li>
+      </ul>
+    </div>
+
+    <div class="role-card" style="border-color:#0f3460;">
+      <h3><span style="color:#0f3460;">STEP 2</span> &nbsp;사업계획서 작성</h3>
+      <ul>
+        <li>사업계획서 구성요소와 작성법 안내</li>
+        <li>아이디어를 구체적 실행 계획으로<br>풀어내도록 질문</li>
+        <li>초안 검토 및 논리적 흐름 점검</li>
+      </ul>
+    </div>
+
+    <div class="role-card" style="border-color:#533483;">
+      <h3><span style="color:#533483;">STEP 3</span> &nbsp;MVP 제품 개발</h3>
+      <ul>
+        <li>기술적 조언과 리소스 연결<br>(개발 경험 멘토의 경우)</li>
+        <li>진척도 체크 및 격려·동기부여</li>
+        <li>사용자 입장에서 피드백 제공</li>
+      </ul>
+    </div>
+
+    <div class="role-card" style="border-color:#16817a;">
+      <h3><span style="color:#16817a;">STEP 4</span> &nbsp;데모데이 피칭 준비</h3>
+      <ul>
+        <li>피칭 구조·요소별 작성법 코칭</li>
+        <li>팀원별 역할 분담 및<br>대본 작성 지원</li>
+        <li>리허설 피드백 및 발표 스킬 조언</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div id="outside" class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#f0faf9;">🌱</div>
+      <div>
+        <div class="section-title">수업 외 팀 활동 지원</div>
+        <div class="section-sub">수업 전후 및 쉬는 시간 팀 케어</div>
+      </div>
+    </div>
+    <div class="principle-list">
+      <div class="principle-item">
+        <div class="principle-dot" style="background:#16817a;"></div>
+        <p>팀 빌딩 및 팀워크 향상 활동 진행</p>
+      </div>
+      <div class="principle-item">
+        <div class="principle-dot" style="background:#16817a;"></div>
+        <p>팀 내 갈등 조정,<br>건설적 토론 문화 조성</p>
+      </div>
+      <div class="principle-item">
+        <div class="principle-dot" style="background:#16817a;"></div>
+        <p>팀원 개개인의 특성 파악 및<br>역량 개발 지원</p>
+      </div>
+      <div class="principle-item">
+        <div class="principle-dot" style="background:#16817a;"></div>
+        <p>수업 전 자리 세팅·교구 배치 보조</p>
+      </div>
+      <div class="principle-item">
+        <div class="principle-dot" style="background:#16817a;"></div>
+        <p>쉬는 시간 학생 소통으로 긴장 완화</p>
+      </div>
+      <div class="principle-item">
+        <div class="principle-dot" style="background:#16817a;"></div>
+        <p>매 회차 출석 및 참여도 기록 후<br>진행자에게 공유</p>
+      </div>
+      <div class="principle-item">
+        <div class="principle-dot" style="background:#16817a;"></div>
+        <p><strong>수업 전 10분</strong> — 당일 활동 흐름·<br>준비물 확인</p>
+      </div>
+      <div class="principle-item">
+        <div class="principle-dot" style="background:#16817a;"></div>
+        <p><strong>수업 후 5분</strong> — 팀 분위기·특이사항·<br>다음 회차 유의점 공유</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div id="caution" class="section">
+    <div class="section-header">
+      <div class="section-icon" style="background:#fff0f3;">⚠️</div>
+      <div>
+        <div class="section-title">멘토 활동 유의사항</div>
+        <div class="section-sub">하지 말아야 할 것 & 반드시 지킬 원칙</div>
+      </div>
+    </div>
+
+    <div class="caution-card">
+      <h3>⛔ 하지 않아야 할 것</h3>
+      <ul>
+        <li>학생 대신 결과물을 만들어 주는 것</li>
+        <li>특정 학생을 비교하거나 평가하는 발언</li>
+        <li>학생 안전·컨디션 이상을 발견했을 때<br>교육 진행자에게 보고 없이 혼자 처리하는 것</li>
+      </ul>
+    </div>
+
+    <div class="section-header" style="margin-top:8px;">
+      <div><div class="section-title">✅ 반드시 지킬 원칙</div></div>
+    </div>
+    <div class="principle-list">
+      <div class="principle-item">
+        <div class="principle-dot"></div>
+        <p>멘토 주도가 아닌 <strong>학생 주도</strong>로 사고하고<br>만들어가도록 이끌기</p>
+      </div>
+      <div class="principle-item">
+        <div class="principle-dot"></div>
+        <p>결과보다 <strong>과정</strong>에 초점 맞추기</p>
+      </div>
+      <div class="principle-item">
+        <div class="principle-dot"></div>
+        <p>학생 개개인의 특성과 역량을 파악하려는 노력</p>
+      </div>
+      <div class="principle-item">
+        <div class="principle-dot"></div>
+        <p>필요 시 교육 진행자(퍼실리테이터)와<br>긴밀히 소통</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  © 2026 한국창의융합연구원 · KICON<br>
+  본 문서는 창업교육 멘토 오리엔테이션 전용입니다.
+</footer>
+
+<script>
+  const navBtns = document.querySelectorAll('.nav-btn');
+
+  // 스크롤 시 활성 버튼 하이라이트 (앵커 이동은 href + scroll-margin-top으로 처리)
+  const sectionIds = ['intro','class','stages','outside','caution'];
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= 100) current = id;
+    });
+    navBtns.forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.getAttribute('href') === '#' + current) {
+        btn.classList.add('active');
+        btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
