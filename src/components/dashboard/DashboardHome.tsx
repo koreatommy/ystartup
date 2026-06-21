@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { QuickStats } from "./QuickStats";
 import { Timeline } from "./Timeline";
 import { LearningGamesIntro } from "./LearningGamesIntro";
 import { Rocket, Sparkles, ArrowRight, ZoomIn, X } from "lucide-react";
@@ -66,7 +65,7 @@ export function DashboardHome({
         </div>
       </section>
 
-      {/* 6단계 로드맵(좌) + 10단계 창업 여정 타임라인(우). 로드맵 아래 Hot Issue */}
+      {/* 6단계 로드맵(좌) + 10단계 창업 여정 타임라인(우) */}
       <section
         className="grid gap-6 lg:grid-cols-[1fr_minmax(0,340px)] lg:items-start"
         aria-label="로드맵 및 창업 여정"
@@ -117,7 +116,6 @@ export function DashboardHome({
               />
             </div>
           )}
-          <QuickStats />
         </div>
         <div className="min-w-0 shrink-0 lg:max-w-[340px]">
           <Timeline
